@@ -14,7 +14,7 @@ class EmailBackend(backends.BaseBackend):
         if can_send and user.email:
             return True
         return False
-        
+    
     def deliver(self, recipient, sender, notice_type, extra_context):
         # TODO: require this to be passed in extra_context
         
