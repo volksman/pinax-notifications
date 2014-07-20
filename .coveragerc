@@ -1,0 +1,4 @@
+[run]
+source = notification
+omit = notification/tests/*
+branch = 1
