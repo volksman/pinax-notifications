@@ -3,5 +3,5 @@ from django.apps import AppConfig as BaseAppConfig
 
 class AppConfig(BaseAppConfig):
 
-    name = "django-notification"
+    name = "notification"
     verbose_name = "Django Notifications"
