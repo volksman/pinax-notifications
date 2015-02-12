@@ -23,3 +23,10 @@ script:
   - tox -e py${TRAVIS_PYTHON_VERSION//[.]/}-$DJANGO
 after_success:
   - coveralls
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/de2a3b882ef75eb94ba3
+    on_success: change
+    on_failure: always
+    on_start: false

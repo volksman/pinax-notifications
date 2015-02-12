@@ -2,6 +2,9 @@
 django-notification
 ===================
 
+.. image:: https://badges.gitter.im/Join%20Chat.svg
+    :target: https://gitter.im/pinax/django-notification
+
 .. image:: https://img.shields.io/travis/pinax/django-notification.svg
     :target: https://travis-ci.org/pinax/django-notification
 
