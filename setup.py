@@ -16,7 +16,7 @@ setup(
     description="User notification management for the Django web framework",
     name="django-notification",
     long_description=read("README.rst"),
-    version="1.3",
+    version="1.3.1",
     url="http://django-notification.rtfd.org/",
     license="MIT",
     packages=find_packages(),
@@ -26,7 +26,7 @@ setup(
             "templates/*"
         ]
     },
-    install_required=[
+    install_requires=[
         "django-user-accounts>=1.0.1"
     ],
     test_suite="runtests.runtests",
