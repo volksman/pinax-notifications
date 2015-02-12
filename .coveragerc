@@ -1,4 +1,7 @@
 [run]
 source = notification
-omit = notification/tests/*
+omit = notification/tests/*,notification/admin.py
 branch = 1
+
+[report]
+omit = notification/tests/*,notification/admin.py

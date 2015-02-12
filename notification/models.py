@@ -12,9 +12,8 @@ from django.utils.translation import get_language, activate
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
+from . import backends
 from .compat import AUTH_USER_MODEL
-
-from notification import backends
 
 
 DEFAULT_QUEUE_ALL = False

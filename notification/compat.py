@@ -1,4 +1,5 @@
 import django
+
 from django.conf import settings
 from django.utils import six
 
@@ -9,11 +10,16 @@ if django.VERSION >= (1, 5):
 else:
     AUTH_USER_MODEL = "auth.User"
 
+
+def old_get_user_model():
+    return User
+
+
 try:
     from django.contrib.auth import get_user_model
 except ImportError:
     from django.contrib.auth.models import User
-    get_user_model = lambda: User
+    get_user_model = old_get_user_model
 
 try:
     from urllib import quote

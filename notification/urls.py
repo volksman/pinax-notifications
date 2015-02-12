@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from notification.views import notice_settings
+from .views import notice_settings
 
 
 urlpatterns = patterns(

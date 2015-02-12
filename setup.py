@@ -1,15 +1,38 @@
-from setuptools import setup, find_packages
+import codecs
+
+from os import path
+from setuptools import find_packages, setup
+
+
+def read(*parts):
+    filename = path.join(path.dirname(__file__), *parts)
+    with codecs.open(filename, encoding="utf-8") as fp:
+        return fp.read()
 
 
 setup(
-    name="django-notification",
-    version=__import__("notification").__version__,
+    author="Pinax Developers",
+    author_email="developers@pinaxprojects.com",
     description="User notification management for the Django web framework",
-    long_description=open("docs/usage.rst").read(),
-    author="James Tauber",
-    author_email="jtauber@jtauber.com",
-    url="https://github.com/pinax/django-notification",
+    name="django-notification",
+    long_description=read("README.rst"),
+    version="1.3",
+    url="http://django-notification.rtfd.org/",
+    license="MIT",
     packages=find_packages(),
+    package_data={
+        "notification": [
+            "locale/*",
+            "templates/*"
+        ]
+    },
+    install_required=[
+        "django-user-accounts>=1.0.1"
+    ],
+    test_suite="runtests.runtests",
+    tests_require=[
+        "django-user-accounts>=1.0.1"
+    ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
@@ -20,10 +43,5 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Framework :: Django",
     ],
-    include_package_data=True,
-    test_suite='runtests',
-    install_requires=[
-        'django>=1.4',
-    ],
-    zip_safe=False,
+    zip_safe=False
 )

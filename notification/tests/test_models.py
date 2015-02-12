@@ -1,11 +1,11 @@
 import base64
 
-from django.test import TestCase
-from django.test.utils import override_settings
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
-from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
+from django.utils.six.moves import cPickle as pickle
+from django.test import TestCase
+from django.test.utils import override_settings
 
 from ..models import NoticeType, NoticeSetting, NoticeQueueBatch
 from ..models import LanguageStoreNotAvailable

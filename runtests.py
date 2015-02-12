@@ -8,21 +8,15 @@ from django.conf import settings
 
 
 DEFAULT_SETTINGS = dict(
-    MIDDLEWARE_CLASSES=(
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    ),
     INSTALLED_APPS=[
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sites",
-        'django.contrib.sessions',
+        "account",
         "notification",
-        "notification.tests",
+        "notification.tests"
+    ],
+    MIDDLEWARE_CLASSES=[
     ],
     DATABASES={
         "default": {
@@ -31,7 +25,7 @@ DEFAULT_SETTINGS = dict(
         }
     },
     SITE_ID=1,
-    ROOT_URLCONF="notification.urls",
+    ROOT_URLCONF="notification.tests.urls",
     SECRET_KEY="notasecret",
 )
 
@@ -56,8 +50,7 @@ def runtests(*test_args):
         runner_class = DjangoTestSuiteRunner
         test_args = ["tests"]
 
-    failures = runner_class(
-        verbosity=1, interactive=True, failfast=False).run_tests(test_args)
+    failures = runner_class(verbosity=1, interactive=True, failfast=False).run_tests(test_args)
     sys.exit(failures)
 
 

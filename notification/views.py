@@ -2,9 +2,9 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 
-from django.contrib.auth.decorators import login_required
+from account.decorators import login_required
 
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from .models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
 
 @login_required

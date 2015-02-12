@@ -1,6 +1,6 @@
+from django.core import management, mail
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.core import management, mail
 
 from ..compat import get_user_model
 from ..models import create_notice_type, queue

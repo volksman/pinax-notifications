@@ -1,1 +1,4 @@
-__version__ = "1.2.0"
+import pkg_resources
+
+
+__version__ = pkg_resources.get_distribution("django-notification").version

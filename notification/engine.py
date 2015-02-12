@@ -9,10 +9,10 @@ from django.core.mail import mail_admins
 from django.contrib.sites.models import Site
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
-from notification.lockfile import FileLock, AlreadyLocked, LockTimeout
-from notification.models import NoticeQueueBatch
-from notification.signals import emitted_notices
-from notification import models as notification
+from .lockfile import FileLock, AlreadyLocked, LockTimeout
+from .models import NoticeQueueBatch
+from .signals import emitted_notices
+from . import models as notification
 
 from .compat import get_user_model
 
