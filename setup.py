@@ -16,14 +16,14 @@ setup(
     description="User notification management for the Django web framework",
     name="django-notification",
     long_description=read("README.rst"),
-    version="1.3.1",
+    version="1.3.2",
     url="http://django-notification.rtfd.org/",
     license="MIT",
     packages=find_packages(),
     package_data={
         "notification": [
             "locale/*",
-            "templates/*"
+            "templates/**/*.html"
         ]
     },
     install_requires=[
