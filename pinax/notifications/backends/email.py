@@ -31,11 +31,11 @@ class EmailBackend(BaseBackend):
             "full.txt"
         ), notice_type.label, context)
 
-        subject = "".join(render_to_string("notification/email_subject.txt", {
+        subject = "".join(render_to_string("pinax/notifications/email_subject.txt", {
             "message": messages["short.txt"],
         }, context).splitlines())
 
-        body = render_to_string("notification/email_body.txt", {
+        body = render_to_string("pinax/notifications/email_body.txt", {
             "message": messages["full.txt"],
         }, context)
 

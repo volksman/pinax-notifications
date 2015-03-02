@@ -1,5 +1,5 @@
-from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from account.decorators import login_required
@@ -12,7 +12,7 @@ def notice_settings(request):
     """
     The notice settings view.
 
-    Template: :template:`notification/notice_settings.html`
+    Template: :template:`pinax/notifications/notice_settings.html`
 
     Context:
 
@@ -32,7 +32,7 @@ def notice_settings(request):
     for notice_type in notice_types:
         settings_row = []
         for medium_id, medium_display in NOTICE_MEDIA:
-            form_label = "%s_%s" % (notice_type.label, medium_id)
+            form_label = "{}_{}".format(notice_type.label, medium_id)
             setting = NoticeSetting.for_user(request.user, notice_type, medium_id)
             if request.method == "POST":
                 if request.POST.get(form_label) == "on":
@@ -55,7 +55,7 @@ def notice_settings(request):
         "rows": settings_table,
     }
 
-    return render_to_response("notification/notice_settings.html", {
+    return render_to_response("pinax/notifications/notice_settings.html", {
         "notice_types": notice_types,
         "notice_settings": settings,
     }, context_instance=RequestContext(request))

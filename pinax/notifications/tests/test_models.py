@@ -9,7 +9,7 @@ from django.test.utils import override_settings
 
 from ..models import NoticeType, NoticeSetting, NoticeQueueBatch
 from ..models import LanguageStoreNotAvailable
-from ..models import get_notification_language, create_notice_type, send_now, send, queue
+from ..models import get_notification_language, send_now, send, queue
 from ..compat import get_user_model
 
 from .models import Language
@@ -21,7 +21,7 @@ class BaseTest(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user("test_user", "test@user.com", "123456")
         self.user2 = get_user_model().objects.create_user("test_user2", "test2@user.com", "123456")
-        create_notice_type("label", "display", "description")
+        NoticeType.create("label", "display", "description")
         self.notice_type = NoticeType.objects.get(label="label")
 
     def tearDown(self):
@@ -31,11 +31,6 @@ class BaseTest(TestCase):
 
 
 class TestNoticeType(TestCase):
-    def test_create_notice_type(self):
-        label = "friends_invite"
-        create_notice_type(label, "Invitation Received", "you received an invitation")
-        n = NoticeType.objects.get(label=label)
-        self.assertEqual(str(n), label)
 
     def test_create(self):
         label = "friends_invite"
@@ -78,14 +73,14 @@ class TestProcedures(BaseTest):
         self.lang.delete()
         NoticeQueueBatch.objects.all().delete()
 
-    @override_settings(NOTIFICATION_LANGUAGE_MODULE="tests.Language")
+    @override_settings(PINAX_NOTIFICATIONS_LANGUAGE_MODULE="tests.Language")
     def test_get_notification_language(self):
         self.assertEqual(get_notification_language(self.user), "en_US")
         self.assertRaises(LanguageStoreNotAvailable, get_notification_language, self.user2)
-        del settings.NOTIFICATION_LANGUAGE_MODULE
+        del settings.PINAX_NOTIFICATIONS_LANGUAGE_MODULE
         self.assertRaises(LanguageStoreNotAvailable, get_notification_language, self.user)
 
-    @override_settings(SITE_ID=1, NOTIFICATION_LANGUAGE_MODULE="tests.Language")
+    @override_settings(SITE_ID=1, PINAX_NOTIFICATIONS_LANGUAGE_MODULE="tests.Language")
     def test_send_now(self):
         Site.objects.create(domain="localhost", name="localhost")
         users = [self.user, self.user2]

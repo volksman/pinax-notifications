@@ -18,7 +18,7 @@ from .compat import get_user_model
 
 # lock timeout value. how long to wait for the lock to become available.
 # default behavior is to never wait for the lock to be available.
-LOCK_WAIT_TIMEOUT = getattr(settings, "NOTIFICATION_LOCK_WAIT_TIMEOUT", -1)
+LOCK_WAIT_TIMEOUT = getattr(settings, "PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT", -1)
 
 
 def acquire_lock(*args):

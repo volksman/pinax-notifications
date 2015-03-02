@@ -14,14 +14,14 @@ setup(
     author="Pinax Developers",
     author_email="developers@pinaxprojects.com",
     description="User notification management for the Django web framework",
-    name="django-notification",
+    name="pinax-notifications",
     long_description=read("README.rst"),
-    version="1.3.3",
-    url="http://django-notification.rtfd.org/",
+    version="2.0.0",
+    url="http://pinax-notifications.rtfd.org/",
     license="MIT",
     packages=find_packages(),
     package_data={
-        "notification": [
+        "pinax.notifications": [
             "locale/**/**/*",
             "templates/**/*.html"
         ]
@@ -36,12 +36,14 @@ setup(
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
+        "Framework :: Django",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.3",
-        "Framework :: Django",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     zip_safe=False
 )

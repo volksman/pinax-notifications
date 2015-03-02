@@ -1,18 +1,14 @@
-.. _changelog:
+# Change Log
 
-ChangeLog
-=========
+_*BI*_ = backward incompatible change
 
-BI = backward incompatible change
 
-1.1.1
------
+## 1.1.1
 
 * fixed a deprecation warning
 
 
-1.1
----
+## 1.1
 
 * added Russian locale
 * added travis integration for tests/lints
@@ -20,21 +16,19 @@ BI = backward incompatible change
 * cleaned up some small bugs identified by pylint
 
 
-1.0
----
+## 1.0
 
 * removed unused `message.py` module
 * removed `captureas` templatetag
 * added `notice_settings.html` template
 * other minor fixes and tweaks, mostly to code style
 
-0.3
----
+## 0.3
 
 * pluggable backends
 
-0.2.0
------
+
+## 0.2.0
 
 * BI: renamed Notice.user to Notice.recipient
 * BI: renamed {{ user }} context variable in notification templates to
@@ -49,7 +43,7 @@ BI = backward incompatible change
 * users which do not exist when sending notification are now ignored
 * BI: split settings part of notices view to its own view notice_settings
 
-0.1.5
------
+
+## 0.1.5
 
 * added support for DEFAULT_HTTP_PROTOCOL allowing https absolute URLs

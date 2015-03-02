@@ -1,0 +1,9 @@
+site_name: pinax-notifications
+pages:
+- [index.md, Home]
+- [changelog.md, Change Log]
+theme: readthedocs
+repo_url: https://github.com/pinax/pinax-notifications
+site_description: "an app"
+site_author: "Pinax Team"
+markdown_extensions: [admonition]

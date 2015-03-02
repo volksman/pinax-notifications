@@ -19,7 +19,7 @@ class BaseBackend(object):
         Determines whether this backend is allowed to send a notification to
         the given user and notice_type.
         """
-        from notification.models import NoticeSetting
+        from pinax.notifications.models import NoticeSetting
         return NoticeSetting.for_user(user, notice_type, self.medium_id).send
 
     def deliver(self, recipient, sender, notice_type, extra_context):
@@ -39,14 +39,15 @@ class BaseBackend(object):
             if fmt.endswith(".txt"):
                 context.autoescape = False
             format_templates[fmt] = render_to_string((
-                "notification/%s/%s" % (label, fmt),
-                "notification/%s" % fmt), context_instance=context)
+                "pinax/notifications/{}/{}".format(label, fmt),
+                "pinax/notifications/{}".format(fmt)), context_instance=context)
         return format_templates
 
     def default_context(self):
-        default_http_protocol = getattr(settings, "DEFAULT_HTTP_PROTOCOL", "http")
+        use_ssl = getattr(settings, "PINAX_USE_SSL", False)
+        default_http_protocol = "https" if use_ssl else "http"
         current_site = Site.objects.get_current()
-        base_url = "%s://%s" % (default_http_protocol, current_site.domain)
+        base_url = "{}://{}".format(default_http_protocol, current_site.domain)
         return Context({
             "default_http_protocol": default_http_protocol,
             "current_site": current_site,

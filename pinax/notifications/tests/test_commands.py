@@ -3,14 +3,14 @@ from django.test import TestCase
 from django.test.utils import override_settings
 
 from ..compat import get_user_model
-from ..models import create_notice_type, queue
+from ..models import NoticeType, queue
 
 
 class TestManagementCmd(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user("test_user", "test@user.com", "123456")
         self.user2 = get_user_model().objects.create_user("test_user2", "test2@user.com", "123456")
-        create_notice_type("label", "display", "description")
+        NoticeType.create("label", "display", "description")
 
     @override_settings(SITE_ID=1)
     def test_emit_notices(self):

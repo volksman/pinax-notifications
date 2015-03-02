@@ -6,16 +6,15 @@ from django.core import exceptions
 from .base import BaseBackend  # noqa
 
 
-# pylint: disable-msg=C0103
 # mostly for backend compatibility
 default_backends = [
-    ("email", "notification.backends.email.EmailBackend"),
+    ("email", "pinax.notifications.backends.email.EmailBackend"),
 ]
 
 
 def load_backends():
     backends = []
-    configured_backends = getattr(settings, "NOTIFICATION_BACKENDS", default_backends)
+    configured_backends = getattr(settings, "PINAX_NOTIFICATIONS_BACKENDS", default_backends)
     for medium_id, bits in enumerate(configured_backends):
         if len(bits) == 2:
             label, backend_path = bits
