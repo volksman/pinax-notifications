@@ -40,10 +40,10 @@ configurable options as to how those notifications are to be received.
 The project aims to provide a Django app for this sort of functionality. This
 includes:
 
- * Submission of notification messages by other apps
- * Notification messages on signing in
- * Notification messages via email (configurable by user)
- * Ability to supply your own backends notification channels
+* Submission of notification messages by other apps
+* Notification messages on signing in
+* Notification messages via email (configurable by user)
+* Ability to supply your own backends notification channels
 
 
 Running the Tests
