@@ -26,7 +26,7 @@ try:
 except ImportError:
     from urllib.parse import quote  # noqa
 
-if six.PY3:
+try:
     from threading import get_ident
-else:
+except ImportError:
     from thread import get_ident  # noqa
