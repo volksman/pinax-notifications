@@ -1,7 +1,6 @@
 import django
 
 from django.conf import settings
-from django.utils import six
 
 
 # Django 1.5 add support for custom auth user model
