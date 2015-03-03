@@ -49,7 +49,7 @@ def send_all(*args):
                 for user, label, extra_context, sender in notices:
                     try:
                         user = get_user_model().objects.get(pk=user)
-                        logging.info("emitting notice {} to {}".format(label, user))
+                        logging.info("emitting notice {0} to {1}".format(label, user))
                         # call this once per user to be atomic and allow for logging to
                         # accurately show how long each takes.
                         if notification.send_now([user], label, extra_context, sender):
@@ -57,7 +57,7 @@ def send_all(*args):
                     except get_user_model().DoesNotExist:
                         # Ignore deleted users, just warn about them
                         logging.warning(
-                            "not emitting notice {} to user {} since it does not exist".format(
+                            "not emitting notice {0} to user {1} since it does not exist".format(
                                 label,
                                 user)
                         )
@@ -76,18 +76,18 @@ def send_all(*args):
             _, e, _ = sys.exc_info()
             # email people
             current_site = Site.objects.get_current()
-            subject = "[{} emit_notices] {}".format(current_site.name, e)
+            subject = "[{0} emit_notices] {1}".format(current_site.name, e)
             message = "\n".join(
                 traceback.format_exception(*sys.exc_info())  # pylint: disable-msg=W0142
             )
             mail_admins(subject, message, fail_silently=True)
             # log it as critical
-            logging.critical("an exception occurred: {}".format(e))
+            logging.critical("an exception occurred: {0}".format(e))
     finally:
         logging.debug("releasing lock...")
         lock.release()
         logging.debug("released.")
 
     logging.info("")
-    logging.info("{} batches, {} sent".format(batches, sent,))
-    logging.info("done in {:.2f} seconds".format(time.time() - start_time))
+    logging.info("{0} batches, {1} sent".format(batches, sent,))
+    logging.info("done in {0:.2f} seconds".format(time.time() - start_time))

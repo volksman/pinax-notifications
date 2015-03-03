@@ -18,10 +18,10 @@ def load_model(path):
         return get_model(path)
     except ValueError:
         raise ImproperlyConfigured(
-            "{} must be of the form 'app_label.model_name'".format(path)
+            "{0} must be of the form 'app_label.model_name'".format(path)
         )
     except LookupError:
-        raise ImproperlyConfigured("{} has not been installed".format(path))
+        raise ImproperlyConfigured("{0} has not been installed".format(path))
 
 
 def load_path_attr(path):

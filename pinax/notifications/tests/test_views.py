@@ -31,7 +31,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)  # pylint: disable-msg=E1103
 
         post_data = {
-            "label_2_{}".format(email_id): "on",
+            "label_2_{0}".format(email_id): "on",
         }
         request = self.factory.post(url, data=post_data)
         request.user = self.user
