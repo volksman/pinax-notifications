@@ -34,7 +34,6 @@ def load_path_attr(path):
     try:
         attr = getattr(mod, attr)
     except AttributeError:
-        print dir(mod)
         raise ImproperlyConfigured("Module '{0}' does not define a '{1}'".format(module, attr))
     return attr
 
