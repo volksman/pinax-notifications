@@ -26,13 +26,7 @@ setup(
             "templates/**/*.html"
         ]
     },
-    install_requires=[
-        "django-user-accounts>=1.0.1"
-    ],
     test_suite="runtests.runtests",
-    tests_require=[
-        "django-user-accounts>=1.0.1"
-    ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",

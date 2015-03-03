@@ -29,3 +29,8 @@ try:
     from threading import get_ident
 except ImportError:
     from thread import get_ident  # noqa
+
+try:
+    from account.decorators import login_required
+except ImportError:
+    from django.contrib.auth.decorators import login_required  # noqa

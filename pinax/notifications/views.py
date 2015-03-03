@@ -2,8 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from account.decorators import login_required
-
+from .compat import login_required
 from .models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
 
