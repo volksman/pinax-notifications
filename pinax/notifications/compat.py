@@ -34,3 +34,12 @@ try:
     from account.decorators import login_required
 except ImportError:
     from django.contrib.auth.decorators import login_required  # noqa
+
+try:
+    from django.apps import apps as django_apps
+    get_model = django_apps.get_model
+except ImportError:
+    from django.db.models import get_model as old_get_model  # noqa
+
+    def get_model(path):
+        return old_get_model(*path.split("."))
