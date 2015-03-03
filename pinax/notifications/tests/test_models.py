@@ -1,13 +1,13 @@
 import base64
 
-from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.utils.six.moves import cPickle as pickle
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from ..models import NoticeType, NoticeSetting, NoticeQueueBatch
+from ..conf import settings
+from ..models import NoticeType, NoticeQueueBatch
 from ..models import LanguageStoreNotAvailable
 from ..models import get_notification_language, send_now, send, queue
 from ..compat import get_user_model
@@ -50,15 +50,16 @@ class TestNoticeType(TestCase):
 class TestNoticeSetting(BaseTest):
     def test_for_user(self):
         email_id = get_backend_id("email")
-        notice_setting = NoticeSetting.objects.create(user=self.user, notice_type=self.notice_type,
+        notice_setting = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.create(user=self.user, notice_type=self.notice_type,
                                                       medium=email_id, send=False)
-        self.assertEqual(NoticeSetting.for_user(self.user, self.notice_type, email_id),
-                         notice_setting)
+        self.assertEqual(
+            settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().for_user(self.user, self.notice_type, email_id, scoping=None),
+            notice_setting
+        )
 
         # test default fallback
-        NoticeSetting.for_user(self.user2, self.notice_type, email_id)
-        ns2 = NoticeSetting.objects.get(user=self.user2, notice_type=self.notice_type,
-                                        medium=email_id)
+        settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().for_user(self.user2, self.notice_type, email_id, scoping=None)
+        ns2 = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.get(user=self.user2, notice_type=self.notice_type, medium=email_id)
         self.assertTrue(ns2.send)
 
 
@@ -73,14 +74,14 @@ class TestProcedures(BaseTest):
         self.lang.delete()
         NoticeQueueBatch.objects.all().delete()
 
-    @override_settings(PINAX_NOTIFICATIONS_LANGUAGE_MODULE="tests.Language")
+    @override_settings(PINAX_NOTIFICATIONS_LANGUAGE_MODEL="tests.Language")
     def test_get_notification_language(self):
         self.assertEqual(get_notification_language(self.user), "en_US")
         self.assertRaises(LanguageStoreNotAvailable, get_notification_language, self.user2)
-        del settings.PINAX_NOTIFICATIONS_LANGUAGE_MODULE
+        setattr(settings, "PINAX_NOTIFICATIONS_LANGUAGE_MODEL", None)
         self.assertRaises(LanguageStoreNotAvailable, get_notification_language, self.user)
 
-    @override_settings(SITE_ID=1, PINAX_NOTIFICATIONS_LANGUAGE_MODULE="tests.Language")
+    @override_settings(SITE_ID=1, PINAX_NOTIFICATIONS_LANGUAGE_MODEL="tests.Language")
     def test_send_now(self):
         Site.objects.create(domain="localhost", name="localhost")
         users = [self.user, self.user2]

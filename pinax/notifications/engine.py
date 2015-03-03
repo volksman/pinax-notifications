@@ -4,7 +4,6 @@ import logging
 import traceback
 import base64
 
-from django.conf import settings
 from django.core.mail import mail_admins
 from django.contrib.sites.models import Site
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
@@ -15,10 +14,7 @@ from .signals import emitted_notices
 from . import models as notification
 
 from .compat import get_user_model
-
-# lock timeout value. how long to wait for the lock to become available.
-# default behavior is to never wait for the lock to be available.
-LOCK_WAIT_TIMEOUT = getattr(settings, "PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT", -1)
+from .conf import settings
 
 
 def acquire_lock(*args):
@@ -29,7 +25,7 @@ def acquire_lock(*args):
 
     logging.debug("acquiring lock...")
     try:
-        lock.acquire(LOCK_WAIT_TIMEOUT)
+        lock.acquire(settings.PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT)
     except AlreadyLocked:
         logging.debug("lock already in place. quitting.")
         return

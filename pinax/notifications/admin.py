@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import NoticeType, NoticeSetting, NoticeQueueBatch
+from .conf import settings
+from .models import NoticeType, NoticeQueueBatch
 
 
 class NoticeTypeAdmin(admin.ModelAdmin):
@@ -13,4 +14,4 @@ class NoticeSettingAdmin(admin.ModelAdmin):
 
 admin.site.register(NoticeQueueBatch)
 admin.site.register(NoticeType, NoticeTypeAdmin)
-admin.site.register(NoticeSetting, NoticeSettingAdmin)
+admin.site.register(settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL(), NoticeSettingAdmin)

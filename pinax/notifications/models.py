@@ -5,23 +5,18 @@ import base64
 
 from django.db import models
 from django.db.models.query import QuerySet
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, activate
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
-from . import backends
 from .compat import AUTH_USER_MODEL
+from .conf import settings
+from .utils import load_media_defaults
 
 
-DEFAULT_QUEUE_ALL = False
-QUEUE_ALL = getattr(settings, "PINAX_NOTIFICATIONS_QUEUE_ALL", DEFAULT_QUEUE_ALL)
-NOTIFICATION_BACKENDS = backends.load_backends()
-NOTICE_MEDIA, NOTICE_MEDIA_DEFAULTS = backends.load_media_defaults(
-    backends=NOTIFICATION_BACKENDS
-)
+NOTICE_MEDIA, NOTICE_MEDIA_DEFAULTS = load_media_defaults()
 
 
 class LanguageStoreNotAvailable(Exception):
@@ -74,7 +69,7 @@ class NoticeType(models.Model):
                 print("Created %s NoticeType" % label)
 
 
-class NoticeSetting(models.Model):
+class NoticeSettingBase(models.Model):
     """
     Indicates, for a given user, whether to send notifications
     of a given type to a given medium.
@@ -85,20 +80,39 @@ class NoticeSetting(models.Model):
     medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
     send = models.BooleanField(_("send"), default=False)
 
+    @classmethod
+    def get_lookup_kwargs(cls, user, notice_type, medium, scoping):
+        raise Exception("Not implemented")
+
+    @classmethod
+    def for_user(cls, user, notice_type, medium, scoping):
+        kwargs = cls.get_lookup_kwargs(user, notice_type, medium, scoping)
+        try:
+            return cls._default_manager.get(**kwargs)
+        except cls.DoesNotExist:
+            default = (NOTICE_MEDIA_DEFAULTS[medium] <= notice_type.default)
+            kwargs.update({"send": default})
+            setting = cls.objects.create(**kwargs)
+            return setting
+
+    class Meta:
+        abstract = True
+
+
+class NoticeSetting(NoticeSettingBase):
+
     class Meta:
         verbose_name = _("notice setting")
         verbose_name_plural = _("notice settings")
         unique_together = ("user", "notice_type", "medium")
 
     @classmethod
-    def for_user(cls, user, notice_type, medium):
-        try:
-            return cls._default_manager.get(user=user, notice_type=notice_type, medium=medium)
-        except cls.DoesNotExist:
-            default = (NOTICE_MEDIA_DEFAULTS[medium] <= notice_type.default)
-            setting = cls(user=user, notice_type=notice_type, medium=medium, send=default)
-            setting.save()
-            return setting
+    def get_lookup_kwargs(cls, user, notice_type, medium, scoping):
+        return {
+            "user": user,
+            "notice_type": notice_type,
+            "medium": medium
+        }
 
 
 class NoticeQueueBatch(models.Model):
@@ -115,20 +129,18 @@ def get_notification_language(user):
     LanguageStoreNotAvailable if this site does not use translated
     notifications.
     """
-    if getattr(settings, "PINAX_NOTIFICATIONS_LANGUAGE_MODULE", False):
+    if settings.PINAX_NOTIFICATIONS_LANGUAGE_MODEL:
+        model = settings.PINAX_NOTIFICATIONS_GET_LANGUAGE_MODEL()
         try:
-            app_label, model_name = settings.PINAX_NOTIFICATIONS_LANGUAGE_MODULE.split(".")
-            model = models.get_model(app_label, model_name)
-            # pylint: disable-msg=W0212
-            language_model = model._default_manager.get(user__id__exact=user.id)
-            if hasattr(language_model, "language"):
-                return language_model.language
+            language = model._default_manager.get(user__id__exact=user.id)
+            if hasattr(language, "language"):
+                return language.language
         except (ImportError, ImproperlyConfigured, model.DoesNotExist):
             raise LanguageStoreNotAvailable
     raise LanguageStoreNotAvailable
 
 
-def send_now(users, label, extra_context=None, sender=None):
+def send_now(users, label, extra_context=None, sender=None, scoping=None):
     """
     Creates a new notice.
 
@@ -159,8 +171,8 @@ def send_now(users, label, extra_context=None, sender=None):
             # activate the user's language
             activate(language)
 
-        for backend in NOTIFICATION_BACKENDS.values():
-            if backend.can_send(user, notice_type):
+        for backend in settings.PINAX_NOTIFICATIONS_BACKENDS.values():
+            if backend.can_send(user, notice_type, scoping=scoping):
                 backend.deliver(user, sender, notice_type, extra_context)
                 sent = True
 
@@ -184,7 +196,7 @@ def send(*args, **kwargs):
     elif now_flag:
         return send_now(*args, **kwargs)
     else:
-        if QUEUE_ALL:
+        if settings.PINAX_NOTIFICATIONS_QUEUE_ALL:
             return queue(*args, **kwargs)
         else:
             return send_now(*args, **kwargs)

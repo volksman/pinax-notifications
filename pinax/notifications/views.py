@@ -32,7 +32,7 @@ def notice_settings(request):
         settings_row = []
         for medium_id, medium_display in NOTICE_MEDIA:
             form_label = "{}_{}".format(notice_type.label, medium_id)
-            setting = NoticeSetting.for_user(request.user, notice_type, medium_id)
+            setting = NoticeSetting.for_user(request.user, notice_type, medium_id, scoping=None)
             if request.method == "POST":
                 if request.POST.get(form_label) == "on":
                     if not setting.send:

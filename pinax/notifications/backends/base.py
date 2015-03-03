@@ -1,8 +1,9 @@
-from django.conf import settings
 from django.template import Context
 from django.template.loader import render_to_string
 
 from django.contrib.sites.models import Site
+
+from ..conf import settings
 
 
 class BaseBackend(object):
@@ -14,13 +15,13 @@ class BaseBackend(object):
         if spam_sensitivity is not None:
             self.spam_sensitivity = spam_sensitivity
 
-    def can_send(self, user, notice_type):
+    def can_send(self, user, notice_type, scoping):
         """
         Determines whether this backend is allowed to send a notification to
         the given user and notice_type.
         """
-        from pinax.notifications.models import NoticeSetting
-        return NoticeSetting.for_user(user, notice_type, self.medium_id).send
+        Setting = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL()
+        return Setting.for_user(user, notice_type, self.medium_id, scoping).send
 
     def deliver(self, recipient, sender, notice_type, extra_context):
         """
