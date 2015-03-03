@@ -26,6 +26,9 @@ setup(
             "templates/**/*.html"
         ]
     },
+    install_requires=[
+        "django-appconf>=1.0.1"
+    ],
     test_suite="runtests.runtests",
     classifiers=[
         "Development Status :: 5 - Production/Stable",

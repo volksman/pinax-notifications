@@ -50,8 +50,12 @@ class TestNoticeType(TestCase):
 class TestNoticeSetting(BaseTest):
     def test_for_user(self):
         email_id = get_backend_id("email")
-        notice_setting = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.create(user=self.user, notice_type=self.notice_type,
-                                                      medium=email_id, send=False)
+        notice_setting = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.create(
+            user=self.user,
+            notice_type=self.notice_type,
+            medium=email_id,
+            send=False
+        )
         self.assertEqual(
             settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().for_user(self.user, self.notice_type, email_id, scoping=None),
             notice_setting
