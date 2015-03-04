@@ -18,6 +18,9 @@ To learn more about Pinax, see http://pinaxproject.com/
 .. image:: https://badges.gitter.im/Join%20Chat.svg
     :target: https://gitter.im/pinax/pinax-notifications
 
+.. image:: https://readthedocs.org/projects/pinax-notifications/badge/?version=latest
+    :target: https://pinax-notifications.readthedocs.org/
+
 .. image:: https://img.shields.io/travis/pinax/pinax-notifications.svg
     :target: https://travis-ci.org/pinax/pinax-notifications
 
