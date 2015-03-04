@@ -31,7 +31,9 @@ scope by a `pinax-teams` team:
                 "medium": medium,
                 "team": scoping
             }
-    
+
+Then add the setting to use this custom model:
+
     # settings.py
     PINAX_NOTIFICATIONS_SETTING_MODEL = "mysite.TeamNoticeSetting"
 
@@ -53,6 +55,8 @@ that handles the lookup of the `setting` for each notice type and channel.
                 medium_id,
                 scoping=self.request.team
             )
+
+Then override the url:
 
     # urls.py
     from django.conf.urls import patterns, url
