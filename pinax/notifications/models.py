@@ -11,9 +11,12 @@ from django.utils.translation import get_language, activate
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
 from .compat import AUTH_USER_MODEL
 from .conf import settings
-from .utils import load_media_defaults
+from .utils import load_media_defaults, notice_setting_for_user
 
 
 NOTICE_MEDIA, NOTICE_MEDIA_DEFAULTS = load_media_defaults()
@@ -69,7 +72,7 @@ class NoticeType(models.Model):
                 print("Created %s NoticeType" % label)
 
 
-class NoticeSettingBase(models.Model):
+class NoticeSetting(models.Model):
     """
     Indicates, for a given user, whether to send notifications
     of a given type to a given medium.
@@ -79,40 +82,23 @@ class NoticeSettingBase(models.Model):
     notice_type = models.ForeignKey(NoticeType, verbose_name=_("notice type"))
     medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
     send = models.BooleanField(_("send"), default=False)
-
-    @classmethod
-    def get_lookup_kwargs(cls, user, notice_type, medium, scoping):
-        raise Exception("Not implemented")
+    scoping_content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    scoping_object_id = models.PositiveIntegerField(null=True, blank=True)
+    scoping = GenericForeignKey("scoping_content_type", "scoping_object_id")
 
     @classmethod
     def for_user(cls, user, notice_type, medium, scoping=None):
-        kwargs = cls.get_lookup_kwargs(user, notice_type, medium, scoping)
-        try:
-            return cls._default_manager.get(**kwargs)
-        except cls.DoesNotExist:
-            default = (NOTICE_MEDIA_DEFAULTS[medium] <= notice_type.default)
-            kwargs.update({"send": default})
-            setting = cls.objects.create(**kwargs)
-            return setting
+        """
+        Kept for backwards compatibilty but isn't used anywhere within this app
 
-    class Meta:
-        abstract = True
-
-
-class NoticeSetting(NoticeSettingBase):
+        @@@ consider deprecating
+        """
+        return notice_setting_for_user(user, notice_type, medium, scoping)
 
     class Meta:
         verbose_name = _("notice setting")
         verbose_name_plural = _("notice settings")
-        unique_together = ("user", "notice_type", "medium")
-
-    @classmethod
-    def get_lookup_kwargs(cls, user, notice_type, medium, scoping):
-        return {
-            "user": user,
-            "notice_type": notice_type,
-            "medium": medium
-        }
+        unique_together = ("user", "notice_type", "medium", "scoping_content_type", "scoping_object_id")
 
 
 class NoticeQueueBatch(models.Model):

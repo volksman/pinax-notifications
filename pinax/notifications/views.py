@@ -3,8 +3,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from .compat import login_required
-from .conf import settings
 from .models import NoticeType, NOTICE_MEDIA
+from .utils import notice_setting_for_user
 
 
 class NoticeSettingsView(TemplateView):
@@ -12,26 +12,29 @@ class NoticeSettingsView(TemplateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        self.SettingModel = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL()
         return super(NoticeSettingsView, self).dispatch(*args, **kwargs)
 
+    @property
+    def scoping(self):
+        return None
+
     def setting_for_user(self, notice_type, medium_id):
-        return self.SettingModel.for_user(
+        return notice_setting_for_user(
             self.request.user,
             notice_type,
-            medium_id
+            medium_id,
+            scoping=self.scoping
         )
 
     def form_label(self, notice_type, medium_id):
-        return "setting-{0}-{1}-{2}".format(
+        return "setting-{0}-{1}".format(
             notice_type.pk,
-            notice_type.label,
             medium_id
         )
 
     def process_cell(self, label):
         val = self.request.POST.get(label)
-        _, pk, _, medium_id = label.split("-")
+        _, pk, medium_id = label.split("-")
         notice_type = NoticeType.objects.get(pk=pk)
         setting = self.setting_for_user(notice_type, medium_id)
         if val == "on":

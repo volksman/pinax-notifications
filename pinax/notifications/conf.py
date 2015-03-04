@@ -48,8 +48,6 @@ def is_installed(package):
 
 class PinaxNotificationsAppConf(AppConf):
 
-    GET_SETTING_MODEL = None
-    SETTING_MODEL = "notifications.NoticeSetting"
     LOCK_WAIT_TIMEOUT = -1
     GET_LANGUAGE_MODEL = None
     LANGUAGE_MODEL = None
@@ -77,10 +75,6 @@ class PinaxNotificationsAppConf(AppConf):
     def configure_get_language_model(self, value):
         if value is None:
             return lambda: load_model(settings.PINAX_NOTIFICATIONS_LANGUAGE_MODEL)
-
-    def configure_get_setting_model(self, value):
-        if value is None:
-            return lambda: load_model(settings.PINAX_NOTIFICATIONS_SETTING_MODEL)
 
     class Meta:
         prefix = "pinax_notifications"

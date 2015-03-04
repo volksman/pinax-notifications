@@ -5,56 +5,23 @@ Sometimes you have a site that has groups or teams. Perhaps you are using
 likely want users who might be members of multiple teams to be able to set
 their notification preferences on a per team or group basis.
 
-You will need to:
-
-* Create a custom model for settings
-* Override NoticeSettingsView
-
-
-## Custom Model for Settings
-
-First thing you need to do is subclass `pinax.notifications.models.NoticeSettingBase`
-and add whatever attributes needed to provide the scoping. For example, to
-scope by a `pinax-teams` team:
-
-    # models.py
-    from pinax.notifications.models import NoticeSettingsBase
-    
-    class TeamNoticeSetting(NoticeSettingsBase):
-        team = models.ForeignKey(Team, null=True)
-        
-        @classmethod
-        def get_lookup_kwargs(cls, user, notice_type, medium, scoping):
-            return {
-                "user": user,
-                "notice_type": notice_type,
-                "medium": medium,
-                "team": scoping
-            }
-
-Then add the setting to use this custom model:
-
-    # settings.py
-    PINAX_NOTIFICATIONS_SETTING_MODEL = "mysite.TeamNoticeSetting"
-
+You will need to to simply override `NoticeSettingsView` to provide your own
+scoping object.
 
 ## Override NoticeSettingsView
 
-Next, let's override the method on `pinax.notifications.views.NoticeSettingsView`
-that handles the lookup of the `setting` for each notice type and channel.
+I think it's best if we just demonstrate via code:
 
     # views.py
     from pinax.notifications.views import NoticeSettingsView
     
+    
     class TeamNoticeSettingsView(NoticeSettingsView):
         
-        def setting_for_user(self, notice_type, medium_id):
-            return self.SettingModel.for_user(
-                self.request.user,
-                notice_type,
-                medium_id,
-                scoping=self.request.team
-            )
+        @property
+        def scoping(self):
+            return self.request.team
+
 
 Then override the url:
 

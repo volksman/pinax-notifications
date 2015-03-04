@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 
 from ..conf import settings
-from ..models import NoticeType, NoticeQueueBatch
+from ..models import NoticeType, NoticeQueueBatch, NoticeSetting
 from ..models import LanguageStoreNotAvailable
 from ..models import get_notification_language, send_now, send, queue
 from ..compat import get_user_model
@@ -50,20 +50,20 @@ class TestNoticeType(TestCase):
 class TestNoticeSetting(BaseTest):
     def test_for_user(self):
         email_id = get_backend_id("email")
-        notice_setting = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.create(
+        notice_setting = NoticeSetting.objects.create(
             user=self.user,
             notice_type=self.notice_type,
             medium=email_id,
             send=False
         )
         self.assertEqual(
-            settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().for_user(self.user, self.notice_type, email_id, scoping=None),
+            NoticeSetting.for_user(self.user, self.notice_type, email_id, scoping=None),
             notice_setting
         )
 
         # test default fallback
-        settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().for_user(self.user2, self.notice_type, email_id, scoping=None)
-        ns2 = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL().objects.get(user=self.user2, notice_type=self.notice_type, medium=email_id)
+        NoticeSetting.for_user(self.user2, self.notice_type, email_id, scoping=None)
+        ns2 = NoticeSetting.objects.get(user=self.user2, notice_type=self.notice_type, medium=email_id)
         self.assertTrue(ns2.send)
 
 

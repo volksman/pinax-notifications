@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .conf import settings
-from .models import NoticeType, NoticeQueueBatch
+from .models import NoticeType, NoticeQueueBatch, NoticeSetting
 
 
 class NoticeTypeAdmin(admin.ModelAdmin):
@@ -9,9 +8,9 @@ class NoticeTypeAdmin(admin.ModelAdmin):
 
 
 class NoticeSettingAdmin(admin.ModelAdmin):
-    list_display = ["id", "user", "notice_type", "medium", "send"]
+    list_display = ["id", "user", "notice_type", "medium", "scoping", "send"]
 
 
 admin.site.register(NoticeQueueBatch)
 admin.site.register(NoticeType, NoticeTypeAdmin)
-admin.site.register(settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL(), NoticeSettingAdmin)
+admin.site.register(NoticeSetting, NoticeSettingAdmin)

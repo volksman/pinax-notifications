@@ -1,9 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
-from ..conf import settings
 from ..compat import get_user_model
-from ..models import NoticeType
+from ..models import NoticeType, NoticeSetting
 from ..views import NoticeSettingsView
 
 from . import get_backend_id
@@ -11,7 +10,6 @@ from . import get_backend_id
 
 class TestViews(TestCase):
     def setUp(self):
-        self.setting_model = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL()
         self.factory = RequestFactory()
         self.user = get_user_model().objects.create_user(username="test_user", email="test@user.com", password="123456")
 
@@ -21,7 +19,7 @@ class TestViews(TestCase):
         NoticeType.create("label_2", "display", "description")
         notice_type_2 = NoticeType.objects.get(label="label_2")
         email_id = get_backend_id("email")
-        setting = self.setting_model.for_user(self.user, notice_type_2, email_id, scoping=None)
+        setting = NoticeSetting.for_user(self.user, notice_type_2, email_id, scoping=None)
         setting.send = False
         setting.save()
         url = reverse("notification_notice_settings")
@@ -41,5 +39,5 @@ class TestViews(TestCase):
         request.user = self.user
         response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 302)  # pylint: disable-msg=E1103
-        self.assertFalse(self.setting_model.for_user(self.user, notice_type_1, email_id, scoping=None).send)
-        self.assertTrue(self.setting_model.for_user(self.user, notice_type_2, email_id, scoping=None).send)
+        self.assertFalse(NoticeSetting.for_user(self.user, notice_type_1, email_id, scoping=None).send)
+        self.assertTrue(NoticeSetting.for_user(self.user, notice_type_2, email_id, scoping=None).send)
