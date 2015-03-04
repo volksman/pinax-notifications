@@ -10,6 +10,7 @@ includes:
 * Notification messages on signing in
 * Notification messages via email (configurable by user)
 * Ability to supply your own backends notification channels
+* Ability to scope notifications at the site level
 
 
 !!! note "Originally django-notification"
@@ -30,7 +31,7 @@ includes:
 
 ## Quickstart
 
-Install the development version:
+Install the latest version:
 
     pip install pinax-notifications
 
@@ -45,3 +46,12 @@ Add `pinax-notifications` to your `INSTALLED_APPS` setting:
 Add entry to your `urls.py`:
 
     url(r"^notifications/", include("pinax.notifications.urls"))
+
+Create one or more notice types:
+
+    NoticeType.create(label, display, description)
+
+In your code, send events;
+
+    from pinax.notifications.models import send
+    send([users], "label", {"extra": context})
