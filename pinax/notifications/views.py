@@ -29,7 +29,7 @@ class NoticeSettingsView(TemplateView):
             medium_id
         )
 
-    def process_row(self, label):
+    def process_cell(self, label):
         val = self.request.POST.get(label)
         _, pk, _, medium_id = label.split("-")
         notice_type = NoticeType.objects.get(pk=pk)
@@ -58,7 +58,7 @@ class NoticeSettingsView(TemplateView):
         table = self.settings_table()
         for row in table:
             for cell in row["cells"]:
-                self.process_row(cell[0])
+                self.process_cell(cell[0])
         return HttpResponseRedirect(request.POST.get("next_page", "."))
 
     def get_context_data(self, **kwargs):
