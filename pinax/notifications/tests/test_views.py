@@ -4,7 +4,7 @@ from django.test import TestCase, RequestFactory
 from ..conf import settings
 from ..compat import get_user_model
 from ..models import NoticeType
-from ..views import notice_settings
+from ..views import NoticeSettingsView
 
 from . import get_backend_id
 
@@ -27,15 +27,19 @@ class TestViews(TestCase):
         url = reverse("notification_notice_settings")
         request = self.factory.get(url)
         request.user = self.user
-        response = notice_settings(request)
+        response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 200)  # pylint: disable-msg=E1103
-
+        label = "setting-{0}-{1}-{2}".format(
+            notice_type_2.pk,
+            notice_type_2.label,
+            email_id
+        )
         post_data = {
-            "label_2_{0}".format(email_id): "on",
+            label: "on",
         }
         request = self.factory.post(url, data=post_data)
         request.user = self.user
-        response = notice_settings(request)
+        response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 302)  # pylint: disable-msg=E1103
         self.assertFalse(self.setting_model.for_user(self.user, notice_type_1, email_id, scoping=None).send)
         self.assertTrue(self.setting_model.for_user(self.user, notice_type_2, email_id, scoping=None).send)

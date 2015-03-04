@@ -85,7 +85,7 @@ class NoticeSettingBase(models.Model):
         raise Exception("Not implemented")
 
     @classmethod
-    def for_user(cls, user, notice_type, medium, scoping):
+    def for_user(cls, user, notice_type, medium, scoping=None):
         kwargs = cls.get_lookup_kwargs(user, notice_type, medium, scoping)
         try:
             return cls._default_manager.get(**kwargs)

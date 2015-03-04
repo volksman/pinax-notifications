@@ -1,60 +1,77 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 
 from .compat import login_required
-from .models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from .conf import settings
+from .models import NoticeType, NOTICE_MEDIA
 
 
-@login_required
-def notice_settings(request):
-    """
-    The notice settings view.
+class NoticeSettingsView(TemplateView):
+    template_name = "pinax/notifications/notice_settings.html"
 
-    Template: :template:`pinax/notifications/notice_settings.html`
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        self.SettingModel = settings.PINAX_NOTIFICATIONS_GET_SETTING_MODEL()
+        return super(NoticeSettingsView, self).dispatch(*args, **kwargs)
 
-    Context:
+    def setting_for_user(self, notice_type, medium_id):
+        return self.SettingModel.for_user(
+            self.request.user,
+            notice_type,
+            medium_id
+        )
 
-        notice_types
-            A list of all :model:`notification.NoticeType` objects.
+    def form_label(self, notice_type, medium_id):
+        return "setting-{0}-{1}-{2}".format(
+            notice_type.pk,
+            notice_type.label,
+            medium_id
+        )
 
-        notice_settings
-            A dictionary containing ``column_headers`` for each ``NOTICE_MEDIA``
-            and ``rows`` containing a list of dictionaries: ``notice_type``, a
-            :model:`notification.NoticeType` object and ``cells``, a list of
-            tuples whose first value is suitable for use in forms and the second
-            value is ``True`` or ``False`` depending on a ``request.POST``
-            variable called ``form_label``, whose valid value is ``on``.
-    """
-    notice_types = NoticeType.objects.all()
-    settings_table = []
-    for notice_type in notice_types:
-        settings_row = []
-        for medium_id, medium_display in NOTICE_MEDIA:
-            form_label = "{0}_{1}".format(notice_type.label, medium_id)
-            setting = NoticeSetting.for_user(request.user, notice_type, medium_id, scoping=None)
-            if request.method == "POST":
-                if request.POST.get(form_label) == "on":
-                    if not setting.send:
-                        setting.send = True
-                        setting.save()
-                else:
-                    if setting.send:
-                        setting.send = False
-                        setting.save()
-            settings_row.append((form_label, setting.send))
-        settings_table.append({"notice_type": notice_type, "cells": settings_row})
+    def process_row(self, label):
+        val = self.request.POST.get(label)
+        _, pk, _, medium_id = label.split("-")
+        notice_type = NoticeType.objects.get(pk=pk)
+        setting = self.setting_for_user(notice_type, medium_id)
+        if val == "on":
+            setting.send = True
+        else:
+            setting.send = False
+        setting.save()
 
-    if request.method == "POST":
-        next_page = request.POST.get("next_page", ".")
-        return HttpResponseRedirect(next_page)
+    def settings_table(self):
+        notice_types = NoticeType.objects.all()
+        table = []
+        for notice_type in notice_types:
+            row = []
+            for medium_id, medium_display in NOTICE_MEDIA:
+                setting = self.setting_for_user(notice_type, medium_id)
+                row.append((
+                    self.form_label(notice_type, medium_id),
+                    setting.send)
+                )
+            table.append({"notice_type": notice_type, "cells": row})
+        return table
 
-    settings = {
-        "column_headers": [medium_display for medium_id, medium_display in NOTICE_MEDIA],
-        "rows": settings_table,
-    }
+    def post(self, request, *args, **kwargs):
+        table = self.settings_table()
+        for row in table:
+            for cell in row["cells"]:
+                self.process_row(cell[0])
+        return HttpResponseRedirect(request.POST.get("next_page", "."))
 
-    return render_to_response("pinax/notifications/notice_settings.html", {
-        "notice_types": notice_types,
-        "notice_settings": settings,
-    }, context_instance=RequestContext(request))
+    def get_context_data(self, **kwargs):
+        settings = {
+            "column_headers": [
+                medium_display
+                for _, medium_display in NOTICE_MEDIA
+            ],
+            "rows": self.settings_table(),
+        }
+        context = super(NoticeSettingsView, self).get_context_data(**kwargs)
+        context.update({
+            "notice_types": NoticeType.objects.all(),
+            "notice_settings": settings
+        })
+        return context
