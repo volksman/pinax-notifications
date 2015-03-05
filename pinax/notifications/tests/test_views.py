@@ -27,9 +27,8 @@ class TestViews(TestCase):
         request.user = self.user
         response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 200)  # pylint: disable-msg=E1103
-        label = "setting-{0}-{1}-{2}".format(
+        label = "setting-{0}-{1}".format(
             notice_type_2.pk,
-            notice_type_2.label,
             email_id
         )
         post_data = {
