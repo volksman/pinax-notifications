@@ -3,12 +3,7 @@ from __future__ import unicode_literals
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 
-from .compat import get_model
-
-try:
-    import importlib
-except ImportError:
-    from django.utils import importlib
+from .compat import get_model, importlib
 
 from appconf import AppConf
 

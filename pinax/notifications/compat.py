@@ -13,6 +13,10 @@ else:
 def old_get_user_model():
     return User
 
+try:
+    import importlib
+except ImportError:
+    from django.utils import importlib  # noqa
 
 try:
     from django.contrib.auth import get_user_model
