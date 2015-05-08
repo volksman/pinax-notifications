@@ -14,9 +14,9 @@ def old_get_user_model():
     return User
 
 try:
-    from django.contrib.contenttypes.generic import GenericForeignKey
+    from django.contrib.contenttypes.fields import GenericForeignKey
 except ImportError:
-    from django.contrib.contenttypes.fields import GenericForeignKey  # noqa
+    from django.contrib.contenttypes.generic import GenericForeignKey  # noqa
 
 try:
     import importlib
