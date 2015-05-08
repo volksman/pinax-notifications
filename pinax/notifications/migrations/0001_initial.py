@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import django
+
 from django.db import models, migrations
 from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    if django.VERSION > (1, 8):
+        dependencies = [
+            ('contenttypes', '0002_remove_content_type_name'),
+            migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ]
 
     operations = [
         migrations.CreateModel(
