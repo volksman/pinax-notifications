@@ -13,7 +13,7 @@ from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
 from django.contrib.contenttypes.models import ContentType
 
-from .compat import AUTH_USER_MODEL, GenericForeignKey
+from .compat import GenericForeignKey
 from .conf import settings
 from .utils import load_media_defaults, notice_setting_for_user
 
@@ -77,7 +77,7 @@ class NoticeSetting(models.Model):
     of a given type to a given medium.
     """
 
-    user = models.ForeignKey(AUTH_USER_MODEL, verbose_name=_("user"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("user"))
     notice_type = models.ForeignKey(NoticeType, verbose_name=_("notice type"))
     medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
     send = models.BooleanField(_("send"), default=False)

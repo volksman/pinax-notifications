@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
+import importlib
+
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 
-from .compat import get_model, importlib
+from .compat import get_model
 
 from appconf import AppConf
 

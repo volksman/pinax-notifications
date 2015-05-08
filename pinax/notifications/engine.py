@@ -5,15 +5,16 @@ import traceback
 import base64
 
 from django.core.mail import mail_admins
-from django.contrib.sites.models import Site
 from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
+
+from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 
 from .lockfile import FileLock, AlreadyLocked, LockTimeout
 from .models import NoticeQueueBatch
 from .signals import emitted_notices
 from . import models as notification
 
-from .compat import get_user_model
 from .conf import settings
 
 

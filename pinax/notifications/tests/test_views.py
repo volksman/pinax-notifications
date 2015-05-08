@@ -1,7 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
-from ..compat import get_user_model
+from django.contrib.auth import get_user_model
+
 from ..models import NoticeType, NoticeSetting
 from ..views import NoticeSettingsView
 
