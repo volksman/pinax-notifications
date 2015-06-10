@@ -9,11 +9,12 @@ from django.conf import settings
 
 class Migration(migrations.Migration):
 
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
     if django.VERSION >= (1, 8, 0):
-        dependencies = [
-            ('contenttypes', '0002_remove_content_type_name'),
-            migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ]
+        dependencies.insert(0,
+            ('contenttypes', '0002_remove_content_type_name'))
 
     operations = [
         migrations.CreateModel(
