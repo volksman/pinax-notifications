@@ -25,26 +25,25 @@ For example::
         "you have received an invitation"
     )
 
+Before Django-1.7, the typical way to automatically do this notice type creation
+was in a `management.py` file for your app, attached to the syncdb signal.
 
-One good way to automatically do this notice type creation is in a
-`management.py` file for your app, attached to the syncdb signal.
+Django-1.7 deprecated the `post_syncdb` signal, so this system needs to be changed. One possible way to do it is using a custom `AppConfig`.
 
 Here is an example:
 
+    # myapp/signals/handlers.py
     from django.conf import settings
-    from django.db.models import signals
     from django.utils.translation import ugettext_noop as _
     
-    if "notification" in settings.INSTALLED_APPS:
-        from pinax.notifications.models import NoticeType
-        
-        def create_notice_types(app, created_models, verbosity, **kwargs):
+    def create_notice_types(sender, **kwargs): 
+        if "pinax.notifications" in settings.INSTALLED_APPS:
+            from pinax.notifications.models import NoticeType
+       	    print "Creating notices for myapp" 
             NoticeType.create("friends_invite", _("Invitation Received"), _("you have received an invitation"))
             NoticeType.create("friends_accept", _("Acceptance Received"), _("an invitation you sent has been accepted"))
-        
-        signals.post_syncdb.connect(create_notice_types, sender=NoticeType)
-    else:
-        print "Skipping creation of NoticeTypes as notification app not found"
+        else:
+            print "Skipping creation of NoticeTypes as notification app not found"
 
 Notice that the code is wrapped in a conditional clause so if
 `pinax-notifications` is not installed, your app will proceed anyway.
@@ -53,6 +52,23 @@ Note that the display and description arguments are marked for translation by
 using ugettext_noop. That will enable you to use Django's makemessages
 management command and use `pinax-notifications` i18n capabilities.
 
+    # myapp/apps.py
+    from django.apps import AppConfig
+    from django.db.models.signals import post_migrate
+
+    from myapp.signals import handlers
+
+    class MyAppConfig(AppConfig):
+        name = 'myapp'
+        verbose_name = 'My App'
+    
+        def ready(self):
+            post_migrate.connect(handlers.create_notice_types, sender=self)
+
+This will call the handler to create notices after the application is migrated.
+
+    # myapp/__init__.py
+    default_app_config = 'myapp.apps.MyAppConfig'
 
 ## Notification Templates
 
