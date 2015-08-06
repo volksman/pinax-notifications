@@ -15,8 +15,8 @@ and can be used independently of other Pinax apps.
 To learn more about Pinax, see http://pinaxproject.com/
 
 
-.. image:: https://badges.gitter.im/Join%20Chat.svg
-    :target: https://gitter.im/pinax/pinax-notifications
+.. image:: http://slack.pinaxproject.com/badge.svg
+   :target: http://slack.pinaxproject.com/
 
 .. image:: https://readthedocs.org/projects/pinax-notifications/badge/?version=latest
     :target: https://pinax-notifications.readthedocs.org/
