@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from .views import NoticeSettingsView
 
 
-urlpatterns = patterns(
-    "",
+urlpatterns = [
     url(r"^settings/$", NoticeSettingsView.as_view(), name="notification_notice_settings"),
-)
+]
