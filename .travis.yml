@@ -1,12 +1,23 @@
 language: python
+sudo: false
 python:
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
 env:
   - DJANGO=1.7
   - DJANGO=1.8
+  - DJANGO=1.9
   - DJANGO=master
+matrix:
+  exclude:
+    - python: "3.3"
+      env: DJANGO=1.9
+    - python: "3.3"
+      env: DJANGO=master
+    - python: "3.5"
+      env: DJANGO=1.7
 install:
   - pip install tox coveralls
 script:
@@ -14,9 +25,4 @@ script:
 after_success:
   - coveralls
 notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/671c49ab17abad8623f6
-    on_success: change
-    on_failure: always
-    on_start: false
+  slack: pinax:S5DnjMx4KmLGyedpnzfVW9ka
