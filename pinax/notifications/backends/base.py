@@ -41,7 +41,7 @@ class BaseBackend(object):
                 context.autoescape = False
             format_templates[fmt] = render_to_string((
                 "pinax/notifications/{0}/{1}".format(label, fmt),
-                "pinax/notifications/{0}".format(fmt)), context_instance=context)
+                "pinax/notifications/{0}".format(fmt)), context)
         return format_templates
 
     def default_context(self):
