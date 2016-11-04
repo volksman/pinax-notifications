@@ -32,12 +32,12 @@ class EmailBackend(BaseBackend):
         ), notice_type.label, context)
 
         context.update({
-            "messages": messages["short.txt"],
+            "message": messages["short.txt"],
         })
         subject = "".join(render_to_string("pinax/notifications/email_subject.txt", context).splitlines())
 
         context.update({
-            "messages": messages["full.txt"]
+            "message": messages["full.txt"]
         })
         body = render_to_string("pinax/notifications/email_body.txt", context)
 
