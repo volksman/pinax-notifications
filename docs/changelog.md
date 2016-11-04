@@ -2,6 +2,24 @@
 
 _*BI*_ = backward incompatible change
 
+## 3.0.1
+* initial support for Django 1.10
+
+
+## 3.0
+* fix compatability with Django migrations
+
+
+## 2.1.0
+* add Django migrations
+
+
+## 2.0
+
+* renamed app as pinax-notifications
+* added the ability to override NoticeSetting model
+* added documentation on scoping notifications
+
 
 ## 1.1.1
 
