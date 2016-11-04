@@ -2,6 +2,13 @@
 
 _*BI*_ = backward incompatible change
 
+## 4.0
+* _*BI*_: To support changes to `render_to_string` in Django 1.10 and above,
+plain text templates must now be autoescaped explicitly using the
+`{% autoescape %}` tag.
+([#68](https://github.com/pinax/pinax-notifications/issues/68#issuecomment-258383323)) 
+
+
 ## 3.0.1
 * initial support for Django 1.10
 
