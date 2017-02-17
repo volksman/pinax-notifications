@@ -20,7 +20,7 @@ class TestViews(TestCase):
         NoticeType.create("label_2", "display", "description")
         notice_type_2 = NoticeType.objects.get(label="label_2")
         email_id = get_backend_id("email")
-        setting = NoticeSetting.for_user(self.user, notice_type_2, email_id, scoping=None)
+        setting = NoticeSetting.for_user(self.user, notice_type_2, email_id)
         setting.send = False
         setting.save()
         url = reverse("notification_notice_settings")
@@ -39,5 +39,5 @@ class TestViews(TestCase):
         request.user = self.user
         response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 302)  # pylint: disable-msg=E1103
-        self.assertFalse(NoticeSetting.for_user(self.user, notice_type_1, email_id, scoping=None).send)
-        self.assertTrue(NoticeSetting.for_user(self.user, notice_type_2, email_id, scoping=None).send)
+        self.assertFalse(NoticeSetting.for_user(self.user, notice_type_1, email_id).send)
+        self.assertTrue(NoticeSetting.for_user(self.user, notice_type_2, email_id).send)

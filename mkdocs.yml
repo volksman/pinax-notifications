@@ -4,7 +4,6 @@ pages:
 - [changelog.md, Change Log]
 - [usage.md, Usage]
 - [settings.md, Settings]
-- [scoping.md, Scoping Notifications]
 theme: readthedocs
 repo_url: https://github.com/pinax/pinax-notifications
 site_description: "an app"

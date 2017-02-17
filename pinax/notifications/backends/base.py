@@ -15,12 +15,12 @@ class BaseBackend(object):
         if spam_sensitivity is not None:
             self.spam_sensitivity = spam_sensitivity
 
-    def can_send(self, user, notice_type, scoping):
+    def can_send(self, user, notice_type):
         """
         Determines whether this backend is allowed to send a notification to
         the given user and notice_type.
         """
-        return hookset.notice_setting_for_user(user, notice_type, self.medium_id, scoping).send
+        return hookset.notice_setting_for_user(user, notice_type, self.medium_id).send
 
     def deliver(self, recipient, sender, notice_type, extra_context):
         """

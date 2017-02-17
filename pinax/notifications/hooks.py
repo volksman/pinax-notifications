@@ -1,6 +1,8 @@
-from django.core.exceptions import ObjectDoesNotExist
+import base64
 
-from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.query import QuerySet
+from django.utils.six.moves import cPickle as pickle
 
 from .conf import settings
 from .utils import load_media_defaults
@@ -8,36 +10,37 @@ from .utils import load_media_defaults
 
 class DefaultHookSet(object):
 
-    def notice_setting_for_user(self, user, notice_type, medium, scoping=None):
+    def notice_setting_for_user(self, user, notice_type, medium):
         kwargs = {
             "notice_type": notice_type,
             "medium": medium
         }
-        if scoping:
-            kwargs.update({
-                "scoping_content_type": ContentType.objects.get_for_model(scoping),
-                "scoping_object_id": scoping.pk
-            })
-        else:
-            kwargs.update({
-                "scoping_content_type__isnull": True,
-                "scoping_object_id__isnull": True
-            })
         try:
             return user.noticesetting_set.get(**kwargs)
         except ObjectDoesNotExist:
             _, NOTICE_MEDIA_DEFAULTS = load_media_defaults()
-            if scoping is None:
-                kwargs.pop("scoping_content_type__isnull")
-                kwargs.pop("scoping_object_id__isnull")
-                kwargs.update({
-                    "scoping_content_type": None,
-                    "scoping_object_id": None
-                })
             default = (NOTICE_MEDIA_DEFAULTS[medium] <= notice_type.default)
             kwargs.update({"send": default})
             setting = user.noticesetting_set.create(**kwargs)
             return setting
+
+    def queue(self, users, label, extra_context=None, sender=None):
+        """
+        Queue the notification in NoticeQueueBatch. This allows for large amounts
+        of user notifications to be deferred to a seperate process running outside
+        the webserver.
+        """
+        from pinax.notifications.models import NoticeQueueBatch
+        if extra_context is None:
+            extra_context = {}
+        if isinstance(users, QuerySet):
+            users = [row["pk"] for row in users.values("pk")]
+        else:
+            users = [user.pk for user in users]
+        notices = []
+        for user in users:
+            notices.append((user, label, extra_context, sender))
+        NoticeQueueBatch(pickled_data=base64.b64encode(pickle.dumps(notices))).save()
 
 
 class HookProxy(object):

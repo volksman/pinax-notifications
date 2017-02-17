@@ -1,19 +1,12 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import base64
-
 from django.db import models
-from django.db.models.query import QuerySet
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, activate
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.six.moves import cPickle as pickle  # pylint: disable-msg=F
 
-from django.contrib.contenttypes.models import ContentType
-
-from .compat import GenericForeignKey
 from .conf import settings
 from .utils import load_media_defaults
 from .hooks import hookset
@@ -82,23 +75,20 @@ class NoticeSetting(models.Model):
     notice_type = models.ForeignKey(NoticeType, verbose_name=_("notice type"))
     medium = models.CharField(_("medium"), max_length=1, choices=NOTICE_MEDIA)
     send = models.BooleanField(_("send"), default=False)
-    scoping_content_type = models.ForeignKey(ContentType, null=True, blank=True)
-    scoping_object_id = models.PositiveIntegerField(null=True, blank=True)
-    scoping = GenericForeignKey("scoping_content_type", "scoping_object_id")
 
     @classmethod
-    def for_user(cls, user, notice_type, medium, scoping=None):
+    def for_user(cls, user, notice_type, medium):
         """
         Kept for backwards compatibilty but isn't used anywhere within this app
 
         @@@ consider deprecating
         """
-        return hookset.notice_setting_for_user(user, notice_type, medium, scoping)
+        return hookset.notice_setting_for_user(user, notice_type, medium)
 
     class Meta:
         verbose_name = _("notice setting")
         verbose_name_plural = _("notice settings")
-        unique_together = ("user", "notice_type", "medium", "scoping_content_type", "scoping_object_id")
+        unique_together = ("user", "notice_type", "medium")
 
 
 class NoticeQueueBatch(models.Model):
@@ -126,7 +116,7 @@ def get_notification_language(user):
     raise LanguageStoreNotAvailable
 
 
-def send_now(users, label, extra_context=None, sender=None, scoping=None):
+def send_now(users, label, extra_context=None, sender=None):
     """
     Creates a new notice.
 
@@ -158,7 +148,7 @@ def send_now(users, label, extra_context=None, sender=None, scoping=None):
             activate(language)
 
         for backend in settings.PINAX_NOTIFICATIONS_BACKENDS.values():
-            if backend.can_send(user, notice_type, scoping=scoping):
+            if backend.can_send(user, notice_type):
                 backend.deliver(user, sender, notice_type, extra_context)
                 sent = True
 
@@ -178,29 +168,11 @@ def send(*args, **kwargs):
     now_flag = kwargs.pop("now", False)
     assert not (queue_flag and now_flag), "'queue' and 'now' cannot both be True."
     if queue_flag:
-        return queue(*args, **kwargs)
+        return hookset.queue(*args, **kwargs)
     elif now_flag:
         return send_now(*args, **kwargs)
     else:
         if settings.PINAX_NOTIFICATIONS_QUEUE_ALL:
-            return queue(*args, **kwargs)
+            return hookset.queue(*args, **kwargs)
         else:
             return send_now(*args, **kwargs)
-
-
-def queue(users, label, extra_context=None, sender=None):
-    """
-    Queue the notification in NoticeQueueBatch. This allows for large amounts
-    of user notifications to be deferred to a seperate process running outside
-    the webserver.
-    """
-    if extra_context is None:
-        extra_context = {}
-    if isinstance(users, QuerySet):
-        users = [row["pk"] for row in users.values("pk")]
-    else:
-        users = [user.pk for user in users]
-    notices = []
-    for user in users:
-        notices.append((user, label, extra_context, sender))
-    NoticeQueueBatch(pickled_data=base64.b64encode(pickle.dumps(notices))).save()

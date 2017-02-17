@@ -14,7 +14,7 @@ setup(
     author="Pinax Developers",
     author_email="developers@pinaxprojects.com",
     description="User notification management for the Django web framework",
-    name="pinax-notifications",
+    name="pinax-notifications-no-scoping",
     long_description=read("README.rst"),
     version="4.0.1",
     url="http://pinax-notifications.rtfd.org/",

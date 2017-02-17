@@ -14,16 +14,11 @@ class NoticeSettingsView(TemplateView):
     def dispatch(self, *args, **kwargs):
         return super(NoticeSettingsView, self).dispatch(*args, **kwargs)
 
-    @property
-    def scoping(self):
-        return None
-
     def setting_for_user(self, notice_type, medium_id):
         return hookset.notice_setting_for_user(
             self.request.user,
             notice_type,
-            medium_id,
-            scoping=self.scoping
+            medium_id
         )
 
     def form_label(self, notice_type, medium_id):

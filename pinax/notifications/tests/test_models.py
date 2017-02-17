@@ -58,12 +58,12 @@ class TestNoticeSetting(BaseTest):
             send=False
         )
         self.assertEqual(
-            NoticeSetting.for_user(self.user, self.notice_type, email_id, scoping=None),
+            NoticeSetting.for_user(self.user, self.notice_type, email_id),
             notice_setting
         )
 
         # test default fallback
-        NoticeSetting.for_user(self.user2, self.notice_type, email_id, scoping=None)
+        NoticeSetting.for_user(self.user2, self.notice_type, email_id)
         ns2 = NoticeSetting.objects.get(user=self.user2, notice_type=self.notice_type, medium=email_id)
         self.assertTrue(ns2.send)
 
