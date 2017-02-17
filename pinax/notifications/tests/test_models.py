@@ -11,7 +11,8 @@ from django.contrib.sites.models import Site
 from ..conf import settings
 from ..models import NoticeType, NoticeQueueBatch, NoticeSetting
 from ..models import LanguageStoreNotAvailable
-from ..models import get_notification_language, send_now, send, queue
+from ..models import get_notification_language, send_now, send
+from ..hooks import hookset
 
 from .models import Language
 
@@ -122,6 +123,6 @@ class TestProcedures(BaseTest):
     @override_settings(SITE_ID=1)
     def test_queue_queryset(self):
         users = get_user_model().objects.all()
-        queue(users, "label")
+        hookset.queue(users, "label")
         self.assertEqual(len(mail.outbox), 0)
         self.assertEqual(NoticeQueueBatch.objects.count(), 1)

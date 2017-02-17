@@ -4,7 +4,8 @@ from django.test.utils import override_settings
 
 from django.contrib.auth import get_user_model
 
-from ..models import NoticeType, queue
+from ..models import NoticeType
+from ..hooks import hookset
 
 
 class TestManagementCmd(TestCase):
@@ -16,7 +17,7 @@ class TestManagementCmd(TestCase):
     @override_settings(SITE_ID=1)
     def test_emit_notices(self):
         users = [self.user, self.user2]
-        queue(users, "label")
+        hookset.queue(users, "label")
         management.call_command("emit_notices")
         self.assertEqual(len(mail.outbox), 2)
         self.assertIn(self.user.email, mail.outbox[0].to)
