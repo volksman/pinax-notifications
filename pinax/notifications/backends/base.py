@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 
 from ..conf import settings
-from ..utils import notice_setting_for_user
+from ..hooks import hookset
 
 
 class BaseBackend(object):
@@ -20,7 +20,7 @@ class BaseBackend(object):
         Determines whether this backend is allowed to send a notification to
         the given user and notice_type.
         """
-        return notice_setting_for_user(user, notice_type, self.medium_id, scoping).send
+        return hookset.notice_setting_for_user(user, notice_type, self.medium_id, scoping).send
 
     def deliver(self, recipient, sender, notice_type, extra_context):
         """

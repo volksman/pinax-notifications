@@ -15,7 +15,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from .compat import GenericForeignKey
 from .conf import settings
-from .utils import load_media_defaults, notice_setting_for_user
+from .utils import load_media_defaults
+from .hooks import hookset
 
 
 NOTICE_MEDIA, NOTICE_MEDIA_DEFAULTS = load_media_defaults()
@@ -92,7 +93,7 @@ class NoticeSetting(models.Model):
 
         @@@ consider deprecating
         """
-        return notice_setting_for_user(user, notice_type, medium, scoping)
+        return hookset.notice_setting_for_user(user, notice_type, medium, scoping)
 
     class Meta:
         verbose_name = _("notice setting")

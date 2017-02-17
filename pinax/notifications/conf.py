@@ -49,6 +49,7 @@ class PinaxNotificationsAppConf(AppConf):
     GET_LANGUAGE_MODEL = None
     LANGUAGE_MODEL = None
     QUEUE_ALL = False
+    HOOKSET = "pinax.notifications.hooks.DefaultHookSet"
     BACKENDS = [
         ("email", "pinax.notifications.backends.email.EmailBackend"),
     ]
@@ -72,6 +73,9 @@ class PinaxNotificationsAppConf(AppConf):
     def configure_get_language_model(self, value):
         if value is None:
             return lambda: load_model(settings.PINAX_NOTIFICATIONS_LANGUAGE_MODEL)
+
+    def configure_hookset(self, value):
+        return load_path_attr(value)()
 
     class Meta:
         prefix = "pinax_notifications"
