@@ -1,8 +1,8 @@
-from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 
 from django.contrib.auth import get_user_model
 
+from ..compat import reverse
 from ..models import NoticeType, NoticeSetting
 from ..views import NoticeSettingsView
 
@@ -23,7 +23,7 @@ class TestViews(TestCase):
         setting = NoticeSetting.for_user(self.user, notice_type_2, email_id, scoping=None)
         setting.send = False
         setting.save()
-        url = reverse("notification_notice_settings")
+        url = reverse("pinax_notifications:notice_settings")
         request = self.factory.get(url)
         request.user = self.user
         response = NoticeSettingsView.as_view()(request)
