@@ -12,9 +12,6 @@ Pinax Notifications
 .. image:: https://img.shields.io/coveralls/pinax/pinax-notifications.svg
     :target: https://coveralls.io/r/pinax/pinax-notifications
 
-.. image:: https://img.shields.io/pypi/dm/pinax-notifications.svg
-    :target:  https://pypi.python.org/pypi/pinax-notifications/
-
 .. image:: https://img.shields.io/pypi/v/pinax-notifications.svg
     :target:  https://pypi.python.org/pypi/pinax-notifications/
 
