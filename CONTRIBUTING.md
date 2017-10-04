@@ -88,7 +88,6 @@ Here is an example of these rules applied:
     
     # second set of imports are Django imports with contrib in their own
     # group.
-    from django.core.urlresolvers import reverse
     from django.db import models
     from django.utils import timezone
     from django.utils.translation import ugettext_lazy as _
@@ -99,6 +98,7 @@ Here is an example of these rules applied:
     from tagging.fields import TagField
     
     # fourth set of imports are local apps
+    from .compat import reverse
     from .fields import MarkupField
     
     
