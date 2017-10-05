@@ -26,3 +26,8 @@ except ImportError:
 
     def get_model(path):
         return old_get_model(*path.split("."))
+
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse  # noqa
