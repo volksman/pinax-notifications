@@ -3,8 +3,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
 from .compat import login_required
-from .models import NoticeType, NOTICE_MEDIA
 from .hooks import hookset
+from .models import NOTICE_MEDIA, NoticeType
 
 
 class NoticeSettingsView(TemplateView):

@@ -1,12 +1,10 @@
-from django.test import TestCase, RequestFactory
-
 from django.contrib.auth import get_user_model
-
-from ..compat import reverse
-from ..models import NoticeType, NoticeSetting
-from ..views import NoticeSettingsView
+from django.test import RequestFactory, TestCase
 
 from . import get_backend_id
+from ..compat import reverse
+from ..models import NoticeSetting, NoticeType
+from ..views import NoticeSettingsView
 
 
 class TestViews(TestCase):
