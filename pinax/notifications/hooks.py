@@ -1,6 +1,5 @@
-from django.core.exceptions import ObjectDoesNotExist
-
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 from .conf import settings
 from .utils import load_media_defaults
