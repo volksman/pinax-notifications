@@ -446,12 +446,13 @@ and which are not dismissed.
 
 _*BI*_ = backward incompatible change
 
-### 4.1
+### 4.1.0
 
 * Add Django 2.0 compatibility testing
 * Drop Django 1.9 and Python 3.3 support
 * Move documentation into README
 * Convert CI and coverage to CircleCi and CodeCov
+* Add PyPi-compatible long description
 
 ### 4.0
 * _*BI*_: To support changes to `render_to_string` in Django 1.10 and above,

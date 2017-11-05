@@ -1,28 +1,59 @@
-import codecs
-
-from os import path
 from setuptools import find_packages, setup
 
+LONG_DESCRIPTION = """
+.. image:: http://pinaxproject.com/pinax-design/patches/pinax-notifications.svg
+    :target: https://pypi.python.org/pypi/pinax-notifications/
 
-def read(*parts):
-    filename = path.join(path.dirname(__file__), *parts)
-    with codecs.open(filename, encoding="utf-8") as fp:
-        return fp.read()
+===================
+Pinax Notifications
+===================
 
-try:
-    from pypandoc import convert
-    read_md = lambda f: convert(f, "rst").replace("\r","")
-except (ImportError, IOError):
-    print("warning: pypandoc module not found, could not convert Markdown to RST")
-    read_md = lambda f: read(f)
+.. image:: https://img.shields.io/pypi/v/pinax-notifications.svg
+    :target: https://pypi.python.org/pypi/pinax-notifications/
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg
+    :target: https://pypi.python.org/pypi/pinax-notifications/
+
+.. image:: https://img.shields.io/circleci/project/github/pinax/pinax-notifications.svg
+    :target: https://circleci.com/gh/pinax/pinax-notifications
+.. image:: https://img.shields.io/codecov/c/github/pinax/pinax-notifications.svg
+    :target: https://codecov.io/gh/pinax/pinax-notifications
+.. image:: https://img.shields.io/github/contributors/pinax/pinax-notifications.svg
+    :target: https://github.com/pinax/pinax-notifications/graphs/contributors
+.. image:: https://img.shields.io/github/issues-pr/pinax/pinax-notifications.svg
+    :target: https://github.com/pinax/pinax-notifications/pulls
+.. image:: https://img.shields.io/github/issues-pr-closed/pinax/pinax-notifications.svg
+    :target: https://github.com/pinax/pinax-notifications/pulls?q=is%3Apr+is%3Aclosed
+
+.. image:: http://slack.pinaxproject.com/badge.svg
+    :target: http://slack.pinaxproject.com/
+
+``pinax-notifications`` is a user notification management app for the Django web framework.
+ 
+``pinax-notifications`` notifies users when certain events have occurred and allows
+configurable options as to how those notifications are to be received.
+
+Features
+--------
+
+* Submission of notification messages by other apps
+* Notification messages on signing in
+* Notification messages via email (configurable by user)
+* Ability to supply your own backend notification channels
+
+Supported Django and Python Versions
+------------------------------------
+
+* Django 1.8, 1.10, 1.11, and 2.0
+* Python 2.7, 3.4, 3.5, and 3.6
+"""
 
 setup(
     author="Pinax Team",
     author_email="team@pinaxprojects.com",
     description="User notification management for the Django web framework",
     name="pinax-notifications",
-    long_description=read_md("README.md"),
-    version="4.1",
+    long_description=LONG_DESCRIPTION,
+    version="4.1.0",
     url="http://github.com/pinax/pinax-notifications/",
     license="MIT",
     packages=find_packages(),
