@@ -54,7 +54,7 @@ setup(
     description="User notification management for the Django web framework",
     name="pinax-notifications",
     long_description=LONG_DESCRIPTION,
-    version="4.1.1",
+    version="4.1.2",
     url="http://github.com/pinax/pinax-notifications/",
     license="MIT",
     packages=find_packages(),

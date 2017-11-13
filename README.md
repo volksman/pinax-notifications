@@ -58,12 +58,12 @@ Add `pinax.notifications` to your `INSTALLED_APPS` setting:
     )
 
 Add `pinax.notifications.urls` to your project urlpatterns:
- +
- +    urlpatterns = [
- +        ...
- +        url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
- +        ...
- +    ]
+ 
+    urlpatterns = [
+        ...
+        url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
+        ...
+    ]
 
 ## Usage
 
@@ -393,6 +393,10 @@ Then override the url:
 ## Change Log
 
 _*BI*_ = backward incompatible change
+
+### 4.1.2
+
+* Fix another silly documentation error
 
 ### 4.1.1
 
