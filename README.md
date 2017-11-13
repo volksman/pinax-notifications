@@ -24,6 +24,7 @@ configurable options as to how those notifications are to be received. `pinax-no
 * Notification messages on signing in
 * Notification messages via email (configurable by user)
 * Ability to supply your own backend notification channels
+* Ability to scope notifications at the site level
 
 ### Supported Django and Python Versions
 
@@ -36,9 +37,7 @@ configurable options as to how those notifications are to be received. `pinax-no
 * [Installation](#installation)
 * [Usage](#usage)
 * [Settings](#settings)
-* [Signals](#signals)
 * [Scoping Notifications](#scoping-notifications)
-* [Template Tags](#template-tags)
 * [Change Log](#change-log)
 * [Project History](#project-history)
 * [About Pinax](#about-pinax)
@@ -46,37 +45,25 @@ configurable options as to how those notifications are to be received. `pinax-no
 
 ## Installation
 
-To install pinax-announcements:
+To install pinax-notifications:
 
-    pip install pinax-announcements
+    pip install pinax-notifications
 
-Add `pinax.announcements` to your `INSTALLED_APPS` setting:
+Add `pinax.notifications` to your `INSTALLED_APPS` setting:
 
     INSTALLED_APPS = (
         ...
-        "pinax.announcements",
+        "pinax.notifications",
         ...
     )
 
-Optionally, if you want someone other than staff to manage announcements,
-enable this authentication backend:
-
-    AUTHENTICATION_BACKENDS = [
-        ...
-        "pinax.announcements.auth_backends.AnnouncementPermissionsBackend",
-        ...
-    ]
-
-then enable permission `"announcements.can_manage"` for these managers.
-
-Lastly add `pinax.announcements.urls` to your project urlpatterns:
-
-    urlpatterns = [
-        ...
-        url(r"^announcements/", include("pinax.announcements.urls", namespace="pinax_announcements")),
-        ...
-    ]
-
+Add `pinax.notifications.urls` to your project urlpatterns:
+ +
+ +    urlpatterns = [
+ +        ...
+ +        url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
+ +        ...
+ +    ]
 
 ## Usage
 
@@ -239,8 +226,8 @@ you to override on a per call basis whether it should call `send_now` or
 
 ### Optional Notification Support
 
-In case you want to use `pinax-notification` in your reusable app, you can wrap
-the import of `pinax-notification` in a conditional clause that tests if it's
+In case you want to use `pinax-notifications` in your reusable app, you can wrap
+the import of `pinax-notifications` in a conditional clause that tests if it's
 installed before sending a notice. As a result your app or project still
 functions without notification.
 
@@ -363,27 +350,6 @@ using crontab setup to execute the `emit_notices` management command to send
 queued messages rather than sending immediately.
 
 
-## Signals
-
-### pinax.announcements.signals.announcement_created
-
-This signal is sent immediately after an announcement is created.
-It provides a single `kwarg` of `announcement`, the created `Announcement` instance.
-Sender is the newly created Announcement instance.
-
-### pinax.announcements.signals.announcement_updated
-
-This signal is sent immediately after an announcement is updated.
-It provides a single `kwarg` of `announcement`, the updated `Announcement` instance.
-Sender is the newly updated Announcement instance.
-
-### pinax.announcements.signals.announcement_deleted
-
-This signal is sent immediately after an announcement is deleted.
-It provides a single `kwarg` of `announcement`, the deleted `Announcement` instance.
-Sender is `None`.
-
-
 ## Scoping Notifications
 
 Sometimes you have a site that has groups or teams. Perhaps you are using
@@ -424,27 +390,13 @@ Then override the url:
     )
 
 
-## Template Tags
-
-### announcements
-
-Filters announcements by `publish_start` and `publish_end` date range, including
-all with no `publish_end` value.
-Returns announcements matching `site_wide == True` and `members_only == False`,
-and which are not dismissed.
-
-    {% announcements as announcement_list %}
-    {% for announcement in announcement_list %}
-        <div>
-            {{ announcement.title }}<br />
-            {{ announcement.content }}
-        </div>
-    {% endfor %}
-
-
 ## Change Log
 
 _*BI*_ = backward incompatible change
+
+### 4.1.1
+
+* Fix installation documentation
 
 ### 4.1.0
 

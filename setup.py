@@ -39,6 +39,7 @@ Features
 * Notification messages on signing in
 * Notification messages via email (configurable by user)
 * Ability to supply your own backend notification channels
+* Ability to scope notifications at the site level
 
 Supported Django and Python Versions
 ------------------------------------
@@ -53,7 +54,7 @@ setup(
     description="User notification management for the Django web framework",
     name="pinax-notifications",
     long_description=LONG_DESCRIPTION,
-    version="4.1.0",
+    version="4.1.1",
     url="http://github.com/pinax/pinax-notifications/",
     license="MIT",
     packages=find_packages(),
