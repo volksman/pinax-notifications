@@ -181,6 +181,8 @@ There are two different ways of sending out notifications. We have support
 for blocking and non-blocking methods of sending notifications. The most
 simple way to send out a notification, for example::
 
+    from pinax.notifications.models import send_now, send, queue
+    
     send([to_user], "friends_invite", {"from_user": from_user})
 
 One thing to note is that `send` is a proxy around either `send_now` or
