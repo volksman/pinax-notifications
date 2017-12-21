@@ -10,8 +10,8 @@ Pinax Notifications
 
 .. image:: https://img.shields.io/pypi/v/pinax-notifications.svg
     :target: https://pypi.python.org/pypi/pinax-notifications/
-.. image:: https://img.shields.io/badge/license-MIT-blue.svg
-    :target: https://pypi.python.org/pypi/pinax-notifications/
+
+\ 
 
 .. image:: https://img.shields.io/circleci/project/github/pinax/pinax-notifications.svg
     :target: https://circleci.com/gh/pinax/pinax-notifications
@@ -24,8 +24,14 @@ Pinax Notifications
 .. image:: https://img.shields.io/github/issues-pr-closed/pinax/pinax-notifications.svg
     :target: https://github.com/pinax/pinax-notifications/pulls?q=is%3Apr+is%3Aclosed
 
+\ 
+
 .. image:: http://slack.pinaxproject.com/badge.svg
     :target: http://slack.pinaxproject.com/
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg
+    :target: https://pypi.python.org/pypi/pinax-notifications/
+
+\ 
 
 ``pinax-notifications`` is a user notification management app for the Django web framework.
  
@@ -44,8 +50,13 @@ Features
 Supported Django and Python Versions
 ------------------------------------
 
-* Django 1.8, 1.10, 1.11, and 2.0
-* Python 2.7, 3.4, 3.5, and 3.6
++-----------------+-----+-----+-----+-----+
+| Django / Python | 2.7 | 3.4 | 3.5 | 3.6 |
++=================+=====+=====+=====+=====+
+|  1.11           |  *  |  *  |  *  |  *  |
++-----------------+-----+-----+-----+-----+
+|  2.0            |     |  *  |  *  |  *  |
++-----------------+-----+-----+-----+-----+
 """
 
 setup(
@@ -54,7 +65,7 @@ setup(
     description="User notification management for the Django web framework",
     name="pinax-notifications",
     long_description=LONG_DESCRIPTION,
-    version="4.1.2",
+    version="4.1.3",
     url="http://github.com/pinax/pinax-notifications/",
     license="MIT",
     packages=find_packages(),
@@ -65,8 +76,6 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Django",
-        'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
         "Intended Audience :: Developers",
