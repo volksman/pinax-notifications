@@ -37,7 +37,7 @@ Pinax Notifications
 ``pinax-notifications`` is a user notification management app for the Django web framework.
  
 ``pinax-notifications`` notifies users when certain events have occurred and allows
-configurable options as to how those notifications are to be received.
+configurable options for how those notifications are received.
 
 Features
 --------
