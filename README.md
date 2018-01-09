@@ -71,22 +71,20 @@ To install pinax-notifications:
 Add `pinax.notifications` to your `INSTALLED_APPS` setting:
 
     INSTALLED_APPS = (
-        ...
+        # other apps
         "pinax.notifications",
-        ...
     )
 
 Add `pinax.notifications.urls` to your project urlpatterns:
  
     urlpatterns = [
-        ...
+        # other urls
         url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
-        ...
     ]
 
 ### Usage
 
-Integrating notification support into your app is a simple three-step process:
+Integrating notification support into your app is a three-step process:
 
 1. create your notice types
 1. create your notice templates
@@ -402,7 +400,7 @@ Then override the url:
 
 _*BI*_ = backward incompatible change
 
-### 4.1.3
+### 5.0.0
 
 * Standardize documentation layout
 * Drop Django v1.8, v1.10 support

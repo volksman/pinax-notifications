@@ -16,7 +16,6 @@ DEFAULT_SETTINGS = dict(
         "pinax.notifications",
         "pinax.notifications.tests"
     ],
-    MIDDLEWARE_CLASSES=[],
     DATABASES={
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
