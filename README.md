@@ -2,7 +2,7 @@
 
 # Pinax Notifications
 
-[![](https://img.shields.io/pypi/v/pinax-notificationss.svg)](https://pypi.python.org/pypi/pinax-notifications/)
+[![](https://img.shields.io/pypi/v/pinax-notifications.svg)](https://pypi.python.org/pypi/pinax-notifications/)
 
 [![CircleCi](https://img.shields.io/circleci/project/github/pinax/pinax-notifications.svg)](https://circleci.com/gh/pinax/pinax-notifications)
 [![Codecov](https://img.shields.io/codecov/c/github/pinax/pinax-notifications.svg)](https://codecov.io/gh/pinax/pinax-notifications)
