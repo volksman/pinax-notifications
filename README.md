@@ -2,23 +2,49 @@
 
 # Pinax Notifications
 
-[![](https://img.shields.io/pypi/v/pinax-notifications.svg)](https://pypi.python.org/pypi/pinax-notifications/)
-[![](https://img.shields.io/badge/license-MIT-blue.svg)](https://pypi.python.org/pypi/pinax-notifications/)
+[![](https://img.shields.io/pypi/v/pinax-notificationss.svg)](https://pypi.python.org/pypi/pinax-notifications/)
 
 [![CircleCi](https://img.shields.io/circleci/project/github/pinax/pinax-notifications.svg)](https://circleci.com/gh/pinax/pinax-notifications)
 [![Codecov](https://img.shields.io/codecov/c/github/pinax/pinax-notifications.svg)](https://codecov.io/gh/pinax/pinax-notifications)
-![](https://img.shields.io/github/contributors/pinax/pinax-notifications.svg)
-![](https://img.shields.io/github/issues-pr/pinax/pinax-notifications.svg)
-![](https://img.shields.io/github/issues-pr-closed/pinax/pinax-notifications.svg)
+[![](https://img.shields.io/github/contributors/pinax/pinax-notifications.svg)](https://github.com/pinax/pinax-notifications/graphs/contributors)
+[![](https://img.shields.io/github/issues-pr/pinax/pinax-notifications.svg)](https://github.com/pinax/pinax-notifications/pulls)
+[![](https://img.shields.io/github/issues-pr-closed/pinax/pinax-notifications.svg)](https://github.com/pinax/pinax-notifications/pulls?q=is%3Apr+is%3Aclosed)
 
 [![](http://slack.pinaxproject.com/badge.svg)](http://slack.pinaxproject.com/)
+[![](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+## Table of Contents
+
+* [About Pinax](#about-pinax)
+* [Overview](#overview)
+  * [Features](#features)
+  * [Supported Django and Python versions](#supported-django-and-python-versions)
+* [Documentation](#documentation)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Settings](#settings)
+  * [Scoping Notifications](#scoping-notifications)
+* [Change Log](#change-log)
+* [History](#history)
+* [Contribute](#contribute)
+* [Code of Conduct](#code-of-conduct)
+* [Connect with Pinax](#connect-with-pinax)
+* [License](#license)
+
+## About Pinax
+
+Pinax is an open-source platform built on the Django Web Framework. It is an ecosystem of reusable
+Django apps, themes, and starter project templates. This collection can be found at http://pinaxproject.com.
+
+## pinax-notifications
+
+### Overview
 
 `pinax-notifications` is a user notification management app for the Django web framework. 
 Many sites need to notify users when certain events have occurred and to allow
 configurable options as to how those notifications are to be received. `pinax-notifications` serves this need.
 
-### Features
+#### Features
 
 * Submission of notification messages by other apps
 * Notification messages on signing in
@@ -26,24 +52,17 @@ configurable options as to how those notifications are to be received. `pinax-no
 * Ability to supply your own backend notification channels
 * Ability to scope notifications at the site level
 
-### Supported Django and Python Versions
+#### Supported Django and Python versions
 
-* Django 1.8, 1.10, 1.11, and 2.0
-* Python 2.7, 3.4, 3.5, and 3.6
-
-
-## Table of Contents
-
-* [Installation](#installation)
-* [Usage](#usage)
-* [Settings](#settings)
-* [Scoping Notifications](#scoping-notifications)
-* [Change Log](#change-log)
-* [Project History](#project-history)
-* [About Pinax](#about-pinax)
+Django \ Python | 2.7 | 3.4 | 3.5 | 3.6
+--------------- | --- | --- | --- | ---
+1.11 |  *  |  *  |  *  |  *  
+2.0  |     |  *  |  *  |  *
 
 
-## Installation
+## Documentation
+
+### Installation
 
 To install pinax-notifications:
 
@@ -52,29 +71,26 @@ To install pinax-notifications:
 Add `pinax.notifications` to your `INSTALLED_APPS` setting:
 
     INSTALLED_APPS = (
-        ...
+        # other apps
         "pinax.notifications",
-        ...
     )
 
 Add `pinax.notifications.urls` to your project urlpatterns:
  
     urlpatterns = [
-        ...
+        # other urls
         url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
-        ...
     ]
 
-## Usage
+### Usage
 
-Integrating notification support into your app is a simple three-step process:
+Integrating notification support into your app is a three-step process:
 
 1. create your notice types
 1. create your notice templates
 1. send notifications
 
-
-### Creating Notice Types
+#### Creating Notice Types
 
 You need to call `NoticeType.create(label, display, description)` once to
 create the notice types for your application in the database.
@@ -133,9 +149,9 @@ This will call the handler to create notices after the application is migrated.
     # myapp/__init__.py
     default_app_config = 'myapp.apps.MyAppConfig'
 
-### Creating Templates
+#### Creating Templates
 
-### `pinax/notifications/notice_settings.html`
+#### `pinax/notifications/notice_settings.html`
 
 This is a template that ships with `pinax-notifications` and provides an
 interview for the user setting of notices that they want to receive. It is
@@ -143,7 +159,7 @@ rendered by the sole view in `pinax.notifications.views` with the context that
 is a list of available `notice_types` as well as the `request.user`'s settings
 for those notice types.
 
-### Backends
+#### Backends
 
 Each backend will have it's own requirements in terms of template(s) it needs
 as well as the context it provides in rendering them. It is possible that some
@@ -175,7 +191,7 @@ the template path called `pinax/notifications/<notice_type_label>/<template_name
 
 If any of these are missing, a default would be used.
 
-### Sending Notifications
+#### Sending Notifications
 
 There are two different ways of sending out notifications. We have support
 for blocking and non-blocking methods of sending notifications. The most
@@ -197,24 +213,22 @@ The parameters are:
 * `extra_content` is a dictionary to add custom context entries to the template
    used to render to notification. This is optional.
 
-
-#### `send_now` vs. `queue` vs. `send`
+##### `send_now` vs. `queue` vs. `send`
 
 Lets first break down what each does.
 
-##### `send_now`
+###### `send_now`
 
 This is a blocking call that will check each user for elgibility of the
 notice and actually peform the send.
 
-##### `queue`
+###### `queue`
 
 This is a non-blocking call that will queue the call to `send_now` to
 be executed at a later time. To later execute the call you need to use
 the `emit_notices` management command.
 
-
-##### `send`
+###### `send`
 
 A proxy around `send_now` and `queue`. It gets its behavior from a global
 setting named `PINAX_NOTIFICATIONS_QUEUE_ALL`. By default it is `False`. This
@@ -225,8 +239,7 @@ is set to `False` to honor the global setting which is `False`. This enables
 you to override on a per call basis whether it should call `send_now` or
 `queue`.
 
-
-### Optional Notification Support
+#### Optional Notification Support
 
 In case you want to use `pinax-notifications` in your reusable app, you can wrap
 the import of `pinax-notifications` in a conditional clause that tests if it's
@@ -247,15 +260,13 @@ and then, later:
     if notification:
         notification.send([to_user], "friends_invite", {"from_user": from_user})
 
-
-## Settings
+### Settings
 
 The following allows you to specify the behavior of `pinax-notifications` in
 your project. Please be aware of the native Django settings which can affect
 the behavior of `pinax-notification`.
 
-
-### PINAX_NOTIFICATIONS_BACKENDS
+#### PINAX_NOTIFICATIONS_BACKENDS
 
 Formerly, this setting was `NOTIFICATION_BACKENDS`.
 
@@ -265,8 +276,7 @@ Defaults to:
         ("email", "pinax.notifications.backends.email.EmailBackend"),
     ]
 
-
-### PINAX_USE_SSL
+#### PINAX_USE_SSL
 
 _This is a proposed common setting across the Pinax ecosystem. It currently may
 not be consistant across all apps._
@@ -279,8 +289,7 @@ This is used to specify the beginning of URLs in the default `email_body.txt`
 file. A common use-case for overriding this default might be `https` for use on
 more secure projects.
 
-
-### PINAX_NOTIFICATIONS_LANGUAGE_MODEL
+#### PINAX_NOTIFICATIONS_LANGUAGE_MODEL
 
 Formerly, this setting was `NOTIFICATION_LANGUAGE_MODULE`
 
@@ -301,16 +310,14 @@ Setting this value in `settings.py`::
 
     PINAX_NOTIFICATIONS_LANGUAGE_MODEL = "languages.Language"
 
-
-### DEFAULT_FROM_EMAIL
+#### DEFAULT_FROM_EMAIL
 
 Defaults to `webmaster@localhost` and is a [standard Django setting](https://docs.djangoproject.com/en/1.7/ref/settings/#default-from-email).
 
 Default e-mail address to use for various automated correspondence from
 `pinax.notifications.backends.email`.
 
-
-### LANGUAGES
+#### LANGUAGES
 
 Defaults to a tuple of all available languages and is a
 [standard Django setting](https://docs.djangoproject.com/en/1.7/ref/settings/#languages).
@@ -327,8 +334,7 @@ definated pattern of usage::
         ("fr", gettext("French")),
     )
 
-
-### PINAX_NOTIFICATIONS_QUEUE_ALL
+#### PINAX_NOTIFICATIONS_QUEUE_ALL
 
 Formerly, this setting was `NOTIFICATION_QUEUE_ALL`.
 
@@ -339,8 +345,7 @@ however, if you set this setting to True, then the default behavior of the
 `send` method will be to queue messages in the database for sending via the
 `emit_notices` command.
 
-
-### PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT
+#### PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT
 
 Formerly, this setting was `NOTIFICATION_LOCK_WAIT_TIMEOUT`.
 
@@ -351,8 +356,7 @@ means to never wait for the lock to become available. This only applies when
 using crontab setup to execute the `emit_notices` management command to send
 queued messages rather than sending immediately.
 
-
-## Scoping Notifications
+### Scoping Notifications
 
 Sometimes you have a site that has groups or teams. Perhaps you are using
 [pinax-teams](https://github.com/pinax/pinax-teams/). If this is the case you
@@ -362,7 +366,7 @@ their notification preferences on a per team or group basis.
 You will need to to simply override `NoticeSettingsView` to provide your own
 scoping object.
 
-### Override NoticeSettingsView
+#### Override NoticeSettingsView
 
 I think it's best if we just demonstrate via code:
 
@@ -396,6 +400,11 @@ Then override the url:
 
 _*BI*_ = backward incompatible change
 
+### 5.0.0
+
+* Standardize documentation layout
+* Drop Django v1.8, v1.10 support
+
 ### 4.1.2
 
 * Fix another silly documentation error
@@ -418,10 +427,8 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 `{% autoescape %}` tag.
 ([#68](https://github.com/pinax/pinax-notifications/issues/68#issuecomment-258383323)) 
 
-
 ### 3.0.1
 * initial support for Django 1.10
-
 
 ### 3.0
 * fix compatability with Django migrations
@@ -430,18 +437,15 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 ### 2.1.0
 * add Django migrations
 
-
 ### 2.0
 
 * renamed app as pinax-notifications
 * added the ability to override NoticeSetting model
 * added documentation on scoping notifications
 
-
 ### 1.1.1
 
 * fixed a deprecation warning
-
 
 ### 1.1
 
@@ -449,7 +453,6 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 * added travis integration for tests/lints
 * added created_notice_type wrapper
 * cleaned up some small bugs identified by pylint
-
 
 ### 1.0
 
@@ -461,7 +464,6 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 ### 0.3
 
 * pluggable backends
-
 
 ### 0.2.0
 
@@ -478,13 +480,12 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 * users which do not exist when sending notification are now ignored
 * BI: split settings part of notices view to its own view notice_settings
 
-
 ### 0.1.5
 
 * added support for DEFAULT_HTTP_PROTOCOL allowing https absolute URLs
 
 
-## Project History
+## History
 
 This app was originally named `django-notification` but was renamed to
 bring a common package name like `notification` under the `pinax` namespace
@@ -495,10 +496,33 @@ form, `notifications` to be in line with the convention we've adopted
 across the ecosystem.
 
 
-## About Pinax
+## Contribute
 
-Pinax is an open-source platform built on the Django Web Framework. It is an ecosystem of reusable Django apps, themes, and starter project templates. This collection can be found at http://pinaxproject.com.
+For an overview on how contributing to Pinax works read this [blog post](http://blog.pinaxproject.com/2016/02/26/recap-february-pinax-hangout/)
+and watch the included video, or read our [How to Contribute](http://pinaxproject.com/pinax/how_to_contribute/) section.
+For concrete contribution ideas, please see our
+[Ways to Contribute/What We Need Help With](http://pinaxproject.com/pinax/ways_to_contribute/) section.
 
-The Pinax documentation is available at http://pinaxproject.com/pinax/. If you would like to help us improve our documentation or write more documentation, please join our Pinax Project Slack team and let us know!
+In case of any questions we recommend you join our [Pinax Slack team](http://slack.pinaxproject.com)
+and ping us there instead of creating an issue on GitHub. Creating issues on GitHub is of course
+also valid but we are usually able to help you faster if you ping us in Slack.
 
-For updates and news regarding the Pinax Project, please follow us on Twitter at @pinaxproject and check out our blog http://blog.pinaxproject.com.
+We also highly recommend reading our blog post on [Open Source and Self-Care](http://blog.pinaxproject.com/2016/01/19/open-source-and-self-care/).
+
+
+## Code of Conduct
+
+In order to foster a kind, inclusive, and harassment-free community, the Pinax Project
+has a [code of conduct](http://pinaxproject.com/pinax/code_of_conduct/).
+We ask you to treat everyone as a smart human programmer that shares an interest in Python, Django, and Pinax with you.
+
+
+## Connect with Pinax
+
+For updates and news regarding the Pinax Project, please follow us on Twitter [@pinaxproject](https://twitter.com/pinaxproject)
+and check out our [Pinax Project blog](http://blog.pinaxproject.com).
+
+
+## License
+
+Copyright (c) 2012-2018 James Tauber and contributors under the [MIT license](https://opensource.org/licenses/MIT).

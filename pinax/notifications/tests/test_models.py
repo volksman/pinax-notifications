@@ -17,7 +17,7 @@ from ..models import (
     get_notification_language,
     queue,
     send,
-    send_now
+    send_now,
 )
 from .models import Language
 
