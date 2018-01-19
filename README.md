@@ -22,6 +22,9 @@
 * [Documentation](#documentation)
   * [Installation](#installation)
   * [Usage](#usage)
+    * [Creating Notice Types](#creating-notice-types)
+    * [Templates](#templates)
+    * [Backend Templates](#backend-templates)
   * [Settings](#settings)
   * [Scoping Notifications](#scoping-notifications)
 * [Change Log](#change-log)
@@ -66,21 +69,27 @@ Django \ Python | 2.7 | 3.4 | 3.5 | 3.6
 
 To install pinax-notifications:
 
-    pip install pinax-notifications
+```shell
+$ pip install pinax-notifications
+```
 
 Add `pinax.notifications` to your `INSTALLED_APPS` setting:
 
-    INSTALLED_APPS = (
-        # other apps
-        "pinax.notifications",
-    )
+```python
+INSTALLED_APPS = [
+    # other apps
+    "pinax.notifications",
+]
+```
 
 Add `pinax.notifications.urls` to your project urlpatterns:
- 
-    urlpatterns = [
-        # other urls
-        url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
-    ]
+
+```python
+urlpatterns = [
+    # other urls
+    url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
+]
+```
 
 ### Usage
 
@@ -101,28 +110,33 @@ create the notice types for your application in the database.
 
 For example:
 
-    from pinax.notifications.models import NoticeType
-    
-    NoticeType.create(
-        "friends_invite",
-        "Invitation Received",
-        "you have received an invitation"
-    )
+```python
+from pinax.notifications.models import NoticeType
+
+NoticeType.create(
+    "friends_invite",
+    "Invitation Received",
+    "you have received an invitation"
+)
+```
 
 One way to create notice types is using a custom `AppConfig`. Here is an example:
 
-    # myapp/signals/handlers.py
-    from django.conf import settings
-    from django.utils.translation import ugettext_noop as _
-    
-    def create_notice_types(sender, **kwargs): 
-        if "pinax.notifications" in settings.INSTALLED_APPS:
-            from pinax.notifications.models import NoticeType
-       	    print("Creating notices for myapp")
-            NoticeType.create("friends_invite", _("Invitation Received"), _("you have received an invitation"))
-            NoticeType.create("friends_accept", _("Acceptance Received"), _("an invitation you sent has been accepted"))
-        else:
-            print("Skipping creation of NoticeTypes as notification app not found")
+```python
+# myapp/signals/handlers.py
+
+from django.conf import settings
+from django.utils.translation import ugettext_noop as _
+
+def create_notice_types(sender, **kwargs): 
+    if "pinax.notifications" in settings.INSTALLED_APPS:
+        from pinax.notifications.models import NoticeType
+        print("Creating notices for myapp")
+        NoticeType.create("friends_invite", _("Invitation Received"), _("you have received an invitation"))
+        NoticeType.create("friends_accept", _("Acceptance Received"), _("an invitation you sent has been accepted"))
+    else:
+        print("Skipping creation of NoticeTypes as notification app not found")
+```
 
 Notice that the code is wrapped in a conditional clause so if
 `pinax-notifications` is not installed, your app will proceed anyway.
@@ -131,47 +145,67 @@ Note that the display and description arguments are marked for translation by
 using ugettext_noop. That will enable you to use Django's makemessages
 management command and use `pinax-notifications` i18n capabilities.
 
-    # myapp/apps.py
-    from django.apps import AppConfig
-    from django.db.models.signals import post_migrate
+```python
+# myapp/apps.py
 
-    from myapp.signals import handlers
+from django.apps import AppConfig
+from django.db.models.signals import post_migrate
 
-    class MyAppConfig(AppConfig):
-        name = 'myapp'
-        verbose_name = 'My App'
-    
-        def ready(self):
-            post_migrate.connect(handlers.create_notice_types, sender=self)
+from myapp.signals import handlers
+
+class MyAppConfig(AppConfig):
+    name = 'myapp'
+    verbose_name = 'My App'
+
+    def ready(self):
+        post_migrate.connect(handlers.create_notice_types, sender=self)
+```
 
 This will call the handler to create notices after the application is migrated.
 
-    # myapp/__init__.py
-    default_app_config = 'myapp.apps.MyAppConfig'
+```python
+# myapp/__init__.py
 
-#### Creating Templates
+default_app_config = 'myapp.apps.MyAppConfig'
+```
 
-#### `pinax/notifications/notice_settings.html`
+#### Templates
 
-This is a template that ships with `pinax-notifications` and provides an
-interview for the user setting of notices that they want to receive. It is
-rendered by the sole view in `pinax.notifications.views` with the context that
-is a list of available `notice_types` as well as the `request.user`'s settings
+Default templates are provided by the [pinax-templates](https://github.com/pinax/pinax-templates) app. The relevant templates
+are located in the [notifications](https://github.com/pinax/pinax-templates/tree/master/pinax/templates/templates/pinax/notifications)
+section of that project. Reference pinax-templates
+[installation instructions](https://github.com/pinax/pinax-templates/blob/master/README.md#installation)
+if you'd like to use these templates in your project.
+
+##### `pinax/notifications/notice_settings.html`
+
+This template allows the user to specify which notices they want to receive.
+This template is rendered by the sole view in `pinax.notifications.views` with the context
+containing a list of available `notice_types` as well as the `request.user`'s settings
 for those notice types.
 
-#### Backends
+#### Backend Templates
 
-Each backend will have it's own requirements in terms of template(s) it needs
-as well as the context it provides in rendering them. It is possible that some
-backends may not even use templates.
+Four templates included with `pinax-templates` support the
+single email backend that is included with `pinax-notifications`.
 
-There are two templates that ship with `pinax-notifications` in support of the
-single email backend that is included out of the box:
+##### `pinax/notifications/short.txt`
+ 
+Renders to the email subject.
 
-* ``short.txt`` renders to the email subject
-* ``full.txt`` renders to the email body
+##### `pinax/notifications/full.txt`
+ 
+Renders to the email body.
 
-In addition to the extra context that is supplied via the `send` call in your
+##### `pinax/notifications/email_body.txt`
+
+Renders the entire email body. Contains `full.txt`.
+
+##### `pinax/notifications/email_subject.txt`
+
+Renders the entire email subject. Contains `short.txt`.
+
+In addition to the extra context supplied via the `send` call in your
 site or app, these templates are rendered with the following context variables:
 
 * `default_http_protocol` - `https` if `settings.PINAX_USE_SSL` is True, otherwise `http`
@@ -181,15 +215,17 @@ site or app, these templates are rendered with the following context variables:
 * `sender` - the value supplied to the `sender` kwarg of the `send` method (often this is not set and will be `None`)
 * `notice` - display value of the notice type
 
-These two templates that ship with `pinax-notifications` and live at
-`pinax/notifications/short.txt` and `pinax/notifications/full.txt` are pretty
-vanilla and default. You will likely want to have per notice type
-customizations.
+You can override default templates shipped with `pinax-templates` by adding alternative templates
+to a directory on the template path called `pinax/notifications/<notice_type_label>/`.
+For the example NoticeType above we might override `short.txt` to surround the notice with asterisks:
 
-In order to do this, each of these templates should be put in a directory on
-the template path called `pinax/notifications/<notice_type_label>/<template_name>`.
+```django
+{# pinax/notifications/friends_invite/short.txt #}
+{% autoescape off %}{% load i18n %}{% blocktrans %}*** {{ notice }} ***{% endblocktrans %}{% endautoescape %}
+```
 
-If any of these are missing, a default would be used.
+If any of the four email backend templates are missing from the alternative directory,
+the appropriate installed default template is used.
 
 #### Sending Notifications
 
@@ -197,14 +233,18 @@ There are two different ways of sending out notifications. We have support
 for blocking and non-blocking methods of sending notifications. The most
 simple way to send out a notification, for example::
 
-    from pinax.notifications.models import send_now, send, queue
-    
-    send([to_user], "friends_invite", {"from_user": from_user})
+```python
+from pinax.notifications.models import send_now, send, queue
+
+send([to_user], "friends_invite", {"from_user": from_user})
+```
 
 One thing to note is that `send` is a proxy around either `send_now` or
 `queue`. They all have the same signature::
 
-    send(users, label, extra_context)
+```python
+send(users, label, extra_context)
+```
 
 The parameters are:
 
@@ -248,67 +288,76 @@ functions without notification.
 
 For example:
 
-    from django.conf import settings
+```python
+from django.conf import settings
 
-    if "notification" in settings.INSTALLED_APPS:
-        from pinax.notifications import models as notification
-    else:
-        notification = None
+if "notification" in settings.INSTALLED_APPS:
+    from pinax.notifications import models as notification
+else:
+    notification = None
+```
 
 and then, later:
 
-    if notification:
-        notification.send([to_user], "friends_invite", {"from_user": from_user})
+```python
+if notification:
+    notification.send([to_user], "friends_invite", {"from_user": from_user})
+```
 
 ### Settings
 
 The following allows you to specify the behavior of `pinax-notifications` in
 your project. Please be aware of the native Django settings which can affect
-the behavior of `pinax-notification`.
+the behavior of `pinax-notifications`.
 
 #### PINAX_NOTIFICATIONS_BACKENDS
 
-Formerly, this setting was `NOTIFICATION_BACKENDS`.
-
 Defaults to:
 
-    [
-        ("email", "pinax.notifications.backends.email.EmailBackend"),
-    ]
+```python
+[
+    ("email", "pinax.notifications.backends.email.EmailBackend"),
+]
+```
+
+Formerly named `NOTIFICATION_BACKENDS`.
 
 #### PINAX_USE_SSL
 
 _This is a proposed common setting across the Pinax ecosystem. It currently may
 not be consistant across all apps._
 
-Formerly, this setting was `DEFAULT_HTTP_PROTOCOL` and defaulted to `http`.
-
-It now defaults to `False`.
+Defaults to `False`.
 
 This is used to specify the beginning of URLs in the default `email_body.txt`
 file. A common use-case for overriding this default might be `https` for use on
 more secure projects.
 
-#### PINAX_NOTIFICATIONS_LANGUAGE_MODEL
+Formerly named `DEFAULT_HTTP_PROTOCOL` and defaulted to "http".
 
-Formerly, this setting was `NOTIFICATION_LANGUAGE_MODULE`
+#### PINAX_NOTIFICATIONS_LANGUAGE_MODEL
 
 There is not set default for this setting. It allows users to specify their own
 notification language.
 
 Example model in a `languages` app::
 
-    from django.conf import settings
+```python
+from django.conf import settings
 
-    class Language(models.Model):
-    
-        user = models.ForeignKey(User)
-        language = models.CharField(max_length=10, choices=settings.LANGUAGES)
+class Language(models.Model):
 
+    user = models.ForeignKey(User)
+    language = models.CharField(max_length=10, choices=settings.LANGUAGES)
+```
 
 Setting this value in `settings.py`::
 
-    PINAX_NOTIFICATIONS_LANGUAGE_MODEL = "languages.Language"
+```python
+PINAX_NOTIFICATIONS_LANGUAGE_MODEL = "languages.Language"
+```
+
+Formerly named `NOTIFICATION_LANGUAGE_MODULE`.
 
 #### DEFAULT_FROM_EMAIL
 
@@ -327,16 +376,16 @@ However, if you need to specify a subset of languages for your site's front end
 you can use this setting to override the default. In which case this is the
 definated pattern of usage::
 
-    gettext = lambda s: s
+```python
+gettext = lambda s: s
 
-    LANGUAGES = (
-        ("en", gettext("English")),
-        ("fr", gettext("French")),
-    )
+LANGUAGES = (
+    ("en", gettext("English")),
+    ("fr", gettext("French")),
+)
+```
 
 #### PINAX_NOTIFICATIONS_QUEUE_ALL
-
-Formerly, this setting was `NOTIFICATION_QUEUE_ALL`.
 
 It defaults to `False`.
 
@@ -345,9 +394,9 @@ however, if you set this setting to True, then the default behavior of the
 `send` method will be to queue messages in the database for sending via the
 `emit_notices` command.
 
-#### PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT
+Formerly named `NOTIFICATION_QUEUE_ALL`.
 
-Formerly, this setting was `NOTIFICATION_LOCK_WAIT_TIMEOUT`.
+#### PINAX_NOTIFICATIONS_LOCK_WAIT_TIMEOUT
 
 It defaults to `-1`.
 
@@ -355,6 +404,8 @@ It defines how long to wait for the lock to become available. Default of -1
 means to never wait for the lock to become available. This only applies when
 using crontab setup to execute the `emit_notices` management command to send
 queued messages rather than sending immediately.
+
+Formerly named `NOTIFICATION_LOCK_WAIT_TIMEOUT`.
 
 ### Scoping Notifications
 
@@ -370,35 +421,44 @@ scoping object.
 
 I think it's best if we just demonstrate via code:
 
-    # views.py
-    from pinax.notifications.views import NoticeSettingsView
-    
-    
-    class TeamNoticeSettingsView(NoticeSettingsView):
-        
-        @property
-        def scoping(self):
-            return self.request.team
+```python
+# views.py
 
+from pinax.notifications.views import NoticeSettingsView
+
+
+class TeamNoticeSettingsView(NoticeSettingsView):
+    
+    @property
+    def scoping(self):
+        return self.request.team
+```
 
 Then override the url:
 
-    # urls.py
-    from django.conf.urls import patterns, url
-    
-    from .views import TeamNoticeSettingsView
-    
-    
-    urlpatterns = patterns(
-        "",
-        ...
-        url(r"^notifications/settings/$", TeamNoticeSettingsView.as_view(), name="notification_notice_settings"),
-    )
+```python
+# urls.py
 
+from django.conf.urls import url
+
+from .views import TeamNoticeSettingsView
+
+
+urlpatterns = [
+    # other urls
+    url(r"^notifications/settings/$", TeamNoticeSettingsView.as_view(), name="notification_notice_settings"),
+]
+```
 
 ## Change Log
 
-_*BI*_ = backward incompatible change
+### 5.0.1
+
+* Fix bytestring decoding bug
+* Update django>=1.11 in requirements
+* Update CI config
+* Add sorting guidance for 3rd-party app imports
+* Improve documentation and markup
 
 ### 5.0.0
 
@@ -467,10 +527,10 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 
 ### 0.2.0
 
-* BI: renamed Notice.user to Notice.recipient
-* BI: renamed {{ user }} context variable in notification templates to
+* _*BI*_: renamed Notice.user to Notice.recipient
+* _*BI*_: renamed {{ user }} context variable in notification templates to
   {{ recipient }}
-* BI: added nullable Notice.sender and modified send_now and queue to take
+* _*BI*_: added nullable Notice.sender and modified send_now and queue to take
   an optional sender
 * added received and sent methods taking a User instance to Notice.objects
 * New default behavior: single notice view now marks unseen notices as seen
@@ -478,11 +538,13 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
   we now encourge use of Django 1.2+ for mailer support
 * notifications are not sent to inactive users
 * users which do not exist when sending notification are now ignored
-* BI: split settings part of notices view to its own view notice_settings
+* _*BI*_: split settings part of notices view to its own view notice_settings
 
 ### 0.1.5
 
 * added support for DEFAULT_HTTP_PROTOCOL allowing https absolute URLs
+
+_*BI*_ = backward incompatible change
 
 
 ## History

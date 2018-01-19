@@ -213,4 +213,7 @@ def queue(users, label, extra_context=None, sender=None):
     notices = []
     for user in users:
         notices.append((user, label, extra_context, sender))
-    NoticeQueueBatch(pickled_data=base64.b64encode(pickle.dumps(notices))).save()
+    # After b64 encoding, bytestring must be converted to string via `decode()`
+    # for use in Django 2.0+ TextField.
+    pickled_data = base64.b64encode(pickle.dumps(notices)).decode()
+    NoticeQueueBatch(pickled_data=pickled_data).save()
