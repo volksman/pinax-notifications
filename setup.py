@@ -1,5 +1,5 @@
 from setuptools import find_packages, setup
-    
+
 VERSION = "5.0.1"
 LONG_DESCRIPTION = """
 .. image:: http://pinaxproject.com/pinax-design/patches/pinax-notifications.svg
@@ -12,7 +12,7 @@ Pinax Notifications
 .. image:: https://img.shields.io/pypi/v/pinax-notifications.svg
     :target: https://pypi.python.org/pypi/pinax-notifications/
 
-\ 
+\
 
 .. image:: https://img.shields.io/circleci/project/github/pinax/pinax-notifications.svg
     :target: https://circleci.com/gh/pinax/pinax-notifications
@@ -25,17 +25,17 @@ Pinax Notifications
 .. image:: https://img.shields.io/github/issues-pr-closed/pinax/pinax-notifications.svg
     :target: https://github.com/pinax/pinax-notifications/pulls?q=is%3Apr+is%3Aclosed
 
-\ 
+\
 
 .. image:: http://slack.pinaxproject.com/badge.svg
     :target: http://slack.pinaxproject.com/
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
     :target: https://pypi.python.org/pypi/pinax-notifications/
 
-\ 
+\
 
 ``pinax-notifications`` is a user notification management app for the Django web framework.
- 
+
 ``pinax-notifications`` notifies users when certain events have occurred and allows
 configurable options for how those notifications are received.
 
@@ -71,7 +71,10 @@ setup(
     license="MIT",
     packages=find_packages(),
     package_data={
-        "notifications": []
+        "pinax.notifications": [
+            "locale/**/**/*",
+            "templates/pinax/notifications/*"
+        ]
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
