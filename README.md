@@ -50,7 +50,6 @@ configurable options as to how those notifications are to be received. `pinax-no
 #### Features
 
 * Submission of notification messages by other apps
-* Notification messages on signing in
 * Notification messages via email (configurable by user)
 * Ability to supply your own backend notification channels
 * Ability to scope notifications at the site level
