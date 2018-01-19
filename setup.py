@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
     
-VERSION = "5.0.0"
+VERSION = "5.0.1"
 LONG_DESCRIPTION = """
 .. image:: http://pinaxproject.com/pinax-design/patches/pinax-notifications.svg
     :target: https://pypi.python.org/pypi/pinax-notifications/
@@ -92,10 +92,11 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     install_requires=[
-        "django>=1.8",
+        "django>=1.11",
         "django-appconf>=1.0.1",
     ],
     tests_require=[
+        "pinax-templates>=1.0.0",
     ],
     test_suite="runtests.runtests",
     zip_safe=False
