@@ -168,15 +168,34 @@ This will call the handler to create notices after the application is migrated.
 default_app_config = 'myapp.apps.MyAppConfig'
 ```
 
+
 #### Templates
 
-Default templates are provided by the [pinax-templates](https://github.com/pinax/pinax-templates) app. The relevant templates
-are located in the [notifications](https://github.com/pinax/pinax-templates/tree/master/pinax/templates/templates/pinax/notifications)
-section of that project. Reference pinax-templates
-[installation instructions](https://github.com/pinax/pinax-templates/blob/master/README.md#installation)
-if you'd like to use these templates in your project.
+Default templates are provided by the `pinax-templates` app in the
+[notifications](https://github.com/pinax/pinax-templates/tree/master/pinax/templates/templates/pinax/notifications)
+section of that project.
 
-##### `pinax/notifications/notice_settings.html`
+Reference pinax-templates
+[installation instructions](https://github.com/pinax/pinax-templates/blob/master/README.md#installation)
+to include these templates in your project.
+
+##### Customizing Templates
+
+Override the default `pinax-templates` templates by copying them into your project
+subdirectory `pinax/notifications/` on the template path and modifying as needed.
+
+For example if your project doesn't use Bootstrap, copy the desired templates
+then remove Bootstrap and Font Awesome class names from your copies.
+Remove class references like `class="btn btn-success"` and `class="icon icon-pencil"` as well as
+`bootstrap` from the `{% load i18n bootstrap %}` statement.
+Since `bootstrap` template tags and filters are no longer loaded, you'll also need to update
+`{{ form|bootstrap }}` to `{{ form }}` since the "bootstrap" filter is no longer available.
+
+##### `base.html`
+
+Base template for other templates.
+
+##### `notice_settings.html`
 
 This template allows the user to specify which notices they want to receive.
 This template is rendered by the sole view in `pinax.notifications.views` with the context
@@ -188,19 +207,19 @@ for those notice types.
 Four templates included with `pinax-templates` support the
 single email backend that is included with `pinax-notifications`.
 
-##### `pinax/notifications/short.txt`
+##### `short.txt`
  
 Renders to the email subject.
 
-##### `pinax/notifications/full.txt`
+##### `full.txt`
  
 Renders to the email body.
 
-##### `pinax/notifications/email_body.txt`
+##### `email_body.txt`
 
 Renders the entire email body. Contains `full.txt`.
 
-##### `pinax/notifications/email_subject.txt`
+##### `email_subject.txt`
 
 Renders the entire email subject. Contains `short.txt`.
 
