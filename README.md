@@ -13,6 +13,7 @@
 [![](http://slack.pinaxproject.com/badge.svg)](http://slack.pinaxproject.com/)
 [![](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+
 ## Table of Contents
 
 * [About Pinax](#about-pinax)
@@ -34,10 +35,12 @@
 * [Connect with Pinax](#connect-with-pinax)
 * [License](#license)
 
+
 ## About Pinax
 
 Pinax is an open-source platform built on the Django Web Framework. It is an ecosystem of reusable
 Django apps, themes, and starter project templates. This collection can be found at http://pinaxproject.com.
+
 
 ## pinax-notifications
 
@@ -167,7 +170,6 @@ This will call the handler to create notices after the application is migrated.
 
 default_app_config = 'myapp.apps.MyAppConfig'
 ```
-
 
 #### Templates
 
@@ -510,7 +512,6 @@ your notice `full.txt` and `short.txt` plain text templates must now be autoesca
 
 ### 3.0
 * fix compatability with Django migrations
-
 
 ### 2.1.0
 * add Django migrations
