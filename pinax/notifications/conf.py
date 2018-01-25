@@ -2,17 +2,16 @@ from __future__ import unicode_literals
 
 import importlib
 
+from django.apps import apps as django_apps
 from django.conf import settings  # noqa
 from django.core.exceptions import ImproperlyConfigured
 
 from appconf import AppConf
 
-from .compat import get_model
-
 
 def load_model(path):
     try:
-        return get_model(path)
+        return django_apps.get_model(path)
     except ValueError:
         raise ImproperlyConfigured(
             "{0} must be of the form 'app_label.model_name'".format(path)

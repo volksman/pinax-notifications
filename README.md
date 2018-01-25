@@ -472,6 +472,10 @@ urlpatterns = [
 
 ## Change Log
 
+### 5.0.2
+
+* Remove unneeded compatibility
+
 ### 5.0.1
 
 * Fix bytestring decoding bug
