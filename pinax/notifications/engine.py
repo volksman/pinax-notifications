@@ -37,6 +37,9 @@ def acquire_lock(*args):
 
 def send_all(*args):
     lock = acquire_lock(*args)
+    if lock is None:
+        logging.debug("no lock acquired. skipping sending.")
+        return
     batches, sent, sent_actual = 0, 0, 0
     start_time = time.time()
 
