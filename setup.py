@@ -51,15 +51,15 @@ Features
 Supported Django and Python Versions
 ------------------------------------
 
-+-----------------+-----+-----+-----+-----+
-| Django / Python | 3.5 | 3.6 | 3.7 | 3.8 |
-+=================+=====+=====+=====+=====+
-|  1.11           |  *  |  *  |  *  |  *  |
-+-----------------+-----+-----+-----+-----+
-|  2.x            |  *  |  *  |  *  |  *  |
-+-----------------+-----+-----+-----+-----+
-|  3.0            |     |  *  |  *  |  *  |
-+-----------------+-----+-----+-----+-----+
++-----------------+-----+-----+-----+
+| Django / Python | 3.6 | 3.7 | 3.8 |
++=================+=====+=====+=====+
+|  1.11           |  *  |  *  |     |
++-----------------+-----+-----+-----+
+|  2.2            |  *  |  *  |  *  |
++-----------------+-----+-----+-----+
+|  3.0            |  *  |  *  |  *  |
++-----------------+-----+-----+-----+
 """
 
 setup(
@@ -83,8 +83,6 @@ setup(
         "Environment :: Web Environment",
         "Framework :: Django",
         'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2.0',
-        'Framework :: Django :: 2.1',
         'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
         "Intended Audience :: Developers",
@@ -92,7 +90,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',

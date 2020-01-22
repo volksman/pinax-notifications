@@ -34,58 +34,16 @@ jobs:
   lint:
     <<: *common
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.8
         environment:
           - TOXENV=checkqa
           - UPLOAD_COVERAGE=0
-  py35dj111:
-    <<: *common
-    docker:
-      - image: circleci/python:3.5
-        environment:
-          TOXENV=py35-dj111
-  py35dj20:
-    <<: *common
-    docker:
-      - image: circleci/python:3.5
-        environment:
-          TOXENV=py35-dj20
-  py35dj21:
-    <<: *common
-    docker:
-      - image: circleci/python:3.5
-        environment:
-          TOXENV=py35-dj21
-  py35dj22:
-    <<: *common
-    docker:
-      - image: circleci/python:3.5
-        environment:
-          TOXENV=py35-dj22
-  py35dj30:
-    <<: *common
-    docker:
-      - image: circleci/python:3.5
-        environment:
-          TOXENV=py35-dj30
   py36dj111:
     <<: *common
     docker:
       - image: circleci/python:3.6
         environment:
           TOXENV=py36-dj111
-  py36dj20:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          TOXENV=py36-dj20
-  py36dj21:
-    <<: *common
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          TOXENV=py36-dj21
   py36dj22:
     <<: *common
     docker:
@@ -104,18 +62,6 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV=py37-dj111
-  py37dj20:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV=py37-dj20
-  py37dj21:
-    <<: *common
-    docker:
-      - image: circleci/python:3.7
-        environment:
-          TOXENV=py37-dj21
   py37dj22:
     <<: *common
     docker:
@@ -128,18 +74,6 @@ jobs:
       - image: circleci/python:3.7
         environment:
           TOXENV=py37-dj30
-  py38dj20:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV=py38-dj20
-  py38dj21:
-    <<: *common
-    docker:
-      - image: circleci/python:3.8
-        environment:
-          TOXENV=py38-dj21
   py38dj22:
     <<: *common
     docker:
@@ -158,22 +92,11 @@ workflows:
   test:
     jobs:
       - lint
-      - py35dj111
-      - py35dj20
-      - py35dj21
-      - py35dj22
-      - py35dj30
       - py36dj111
-      - py36dj20
-      - py36dj21
       - py36dj22
       - py36dj30
       - py37dj111
-      - py37dj20
-      - py37dj21
       - py37dj22
       - py37dj30
-      - py38dj20
-      - py38dj21
       - py38dj22
       - py38dj30
