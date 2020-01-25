@@ -64,7 +64,7 @@ Supported Django and Python Versions
 
 setup(
     author="Pinax Team",
-    author_email="team@pinaxprojects.com",
+    author_email="team@pinaxproject.com",
     description="User notification management for the Django web framework",
     name="pinax-notifications",
     long_description=LONG_DESCRIPTION,
