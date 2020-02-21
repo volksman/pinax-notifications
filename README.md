@@ -475,6 +475,8 @@ urlpatterns = [
 
 ## Change Log
 
+### 6.0.0
+
 ### 5.0.2
 
 * Remove unneeded compatibility
