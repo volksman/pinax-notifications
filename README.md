@@ -20,7 +20,7 @@
 * [Important Links](#important-links)
 * [Overview](#overview)
   * [Features](#features)
-  * [Supported Django and Python versions](#supported-django-and-python-versions)
+  * [Supported Django and Python Versions](#supported-django-and-python-versions)
 * [Documentation](#documentation)
   * [Installation](#installation)
   * [Usage](#usage)
@@ -68,7 +68,7 @@ configurable options as to how those notifications are to be received. `pinax-no
 * Ability to supply your own backend notification channels
 * Ability to scope notifications at the site level
 
-#### Supported Django and Python versions
+#### Supported Django and Python Versions
 
 Django / Python | 3.6 | 3.7 | 3.8
 --------------- | --- | --- | ---
