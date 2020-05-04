@@ -7,7 +7,6 @@ from django.core import mail
 from django.test import TestCase
 from django.test.utils import override_settings
 
-from . import get_backend_id
 from ..conf import settings
 from ..models import (
     LanguageStoreNotAvailable,
@@ -19,6 +18,7 @@ from ..models import (
     send,
     send_now,
 )
+from . import get_backend_id
 from .models import Language
 
 

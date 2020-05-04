@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
-from . import get_backend_id
 from ..models import NoticeSetting, NoticeType
 from ..views import NoticeSettingsView
+from . import get_backend_id
 
 
 class TestViews(TestCase):

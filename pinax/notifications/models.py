@@ -6,8 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.db.models.query import QuerySet
-from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import activate, get_language
+from django.utils.translation import ugettext_lazy as _
 
 from .conf import settings
 from .hooks import hookset

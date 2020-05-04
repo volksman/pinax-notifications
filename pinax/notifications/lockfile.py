@@ -286,9 +286,7 @@ class LinkFileLock(LockBase):
         return os.path.exists(self.lock_file)
 
     def i_am_locking(self):
-        return (self.is_locked() and
-                os.path.exists(self.unique_name) and
-                os.stat(self.unique_name).st_nlink == 2)
+        return (self.is_locked() and os.path.exists(self.unique_name) and os.stat(self.unique_name).st_nlink == 2)
 
     def break_lock(self):
         if os.path.exists(self.lock_file):
@@ -363,8 +361,7 @@ class MkdirFileLock(LockBase):
         return os.path.exists(self.lock_file)
 
     def i_am_locking(self):
-        return (self.is_locked() and
-                os.path.exists(self.unique_name))
+        return (self.is_locked() and os.path.exists(self.unique_name))
 
     def break_lock(self):
         if os.path.exists(self.lock_file):
