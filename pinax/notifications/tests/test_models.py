@@ -74,12 +74,12 @@ class TestNoticeSetting(BaseTest):
 
 class TestProcedures(BaseTest):
     def setUp(self):
-        super(TestProcedures, self).setUp()
+        super().setUp()
         self.lang = Language.objects.create(user=self.user, language="en_US")
         mail.outbox = []
 
     def tearDown(self):
-        super(TestProcedures, self).tearDown()
+        super().tearDown()
         self.lang.delete()
         NoticeQueueBatch.objects.all().delete()
 

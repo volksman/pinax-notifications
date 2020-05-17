@@ -10,7 +10,7 @@ class EmailBackend(BaseBackend):
     spam_sensitivity = 2
 
     def can_send(self, user, notice_type, scoping):
-        can_send = super(EmailBackend, self).can_send(user, notice_type, scoping)
+        can_send = super().can_send(user, notice_type, scoping)
         if can_send and user.email:
             return True
         return False

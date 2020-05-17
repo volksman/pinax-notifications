@@ -177,7 +177,7 @@ class LockBase:
             tname = ""
         dirname = os.path.dirname(self.lock_file)
         self.unique_name = os.path.join(dirname,
-                                        "%s.%s%s" % (self.hostname,
+                                        "{}.{}{}".format(self.hostname,
                                                      tname,
                                                      self.pid))
 
@@ -243,7 +243,7 @@ class LinkFileLock(LockBase):
     def acquire(self, timeout=None):
         try:
             open(self.unique_name, "wb").close()
-        except IOError:
+        except OSError:
             raise LockFailed("failed to create %s" % self.unique_name)
 
         end_time = time.time()
@@ -309,7 +309,7 @@ class MkdirFileLock(LockBase):
         # it.
         self.unique_name = os.path.join(
             self.lock_file,
-            "{}.{}{}".format(self.hostname, tname, self.pid)
+            f"{self.hostname}.{tname}{self.pid}"
         )
 
     def attempt_acquire(self, timeout, end_time, wait):
