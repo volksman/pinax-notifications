@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
-from . import get_backend_id
 from ..models import NoticeSetting, NoticeType
 from ..views import NoticeSettingsView
+from . import get_backend_id
 
 
 class TestViews(TestCase):
@@ -26,7 +26,7 @@ class TestViews(TestCase):
         request.user = self.user
         response = NoticeSettingsView.as_view()(request)
         self.assertEqual(response.status_code, 200)  # pylint: disable-msg=E1103
-        label = "setting-{0}-{1}".format(
+        label = "setting-{}-{}".format(
             notice_type_2.pk,
             email_id
         )

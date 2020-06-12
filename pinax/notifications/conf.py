@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import importlib
 
 from django.apps import apps as django_apps
@@ -14,10 +12,10 @@ def load_model(path):
         return django_apps.get_model(path)
     except ValueError:
         raise ImproperlyConfigured(
-            "{0} must be of the form 'app_label.model_name'".format(path)
+            f"{path} must be of the form 'app_label.model_name'"
         )
     except LookupError:
-        raise ImproperlyConfigured("{0} has not been installed".format(path))
+        raise ImproperlyConfigured(f"{path} has not been installed")
 
 
 def load_path_attr(path):
@@ -26,11 +24,11 @@ def load_path_attr(path):
     try:
         mod = importlib.import_module(module)
     except ImportError as e:
-        raise ImproperlyConfigured("Error importing {0}: '{1}'".format(module, e))
+        raise ImproperlyConfigured(f"Error importing {module}: '{e}'")
     try:
         attr = getattr(mod, attr)
     except AttributeError:
-        raise ImproperlyConfigured("Module '{0}' does not define a '{1}'".format(module, attr))
+        raise ImproperlyConfigured(f"Module '{module}' does not define a '{attr}'")
     return attr
 
 

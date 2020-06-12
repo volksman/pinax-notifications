@@ -12,7 +12,7 @@ class NoticeSettingsView(TemplateView):
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(NoticeSettingsView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
     @property
     def scoping(self):
@@ -27,7 +27,7 @@ class NoticeSettingsView(TemplateView):
         )
 
     def form_label(self, notice_type, medium_id):
-        return "setting-{0}-{1}".format(
+        return "setting-{}-{}".format(
             notice_type.pk,
             medium_id
         )
@@ -72,7 +72,7 @@ class NoticeSettingsView(TemplateView):
             ],
             "rows": self.settings_table(),
         }
-        context = super(NoticeSettingsView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context.update({
             "notice_types": NoticeType.objects.all(),
             "notice_settings": settings

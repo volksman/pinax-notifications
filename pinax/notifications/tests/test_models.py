@@ -1,13 +1,12 @@
 import base64
+import pickle
 
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils.six.moves import cPickle as pickle
 
-from . import get_backend_id
 from ..conf import settings
 from ..models import (
     LanguageStoreNotAvailable,
@@ -19,6 +18,7 @@ from ..models import (
     send,
     send_now,
 )
+from . import get_backend_id
 from .models import Language
 
 
@@ -74,12 +74,12 @@ class TestNoticeSetting(BaseTest):
 
 class TestProcedures(BaseTest):
     def setUp(self):
-        super(TestProcedures, self).setUp()
+        super().setUp()
         self.lang = Language.objects.create(user=self.user, language="en_US")
         mail.outbox = []
 
     def tearDown(self):
-        super(TestProcedures, self).tearDown()
+        super().tearDown()
         self.lang.delete()
         NoticeQueueBatch.objects.all().delete()
 

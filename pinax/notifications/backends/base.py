@@ -5,7 +5,7 @@ from ..conf import settings
 from ..hooks import hookset
 
 
-class BaseBackend(object):
+class BaseBackend:
     """
     The base backend.
     """
@@ -35,15 +35,15 @@ class BaseBackend(object):
         format_templates = {}
         for fmt in formats:
             format_templates[fmt] = render_to_string((
-                "pinax/notifications/{0}/{1}".format(label, fmt),
-                "pinax/notifications/{0}".format(fmt)), context)
+                f"pinax/notifications/{label}/{fmt}",
+                f"pinax/notifications/{fmt}"), context)
         return format_templates
 
     def default_context(self):
         use_ssl = getattr(settings, "PINAX_USE_SSL", False)
         default_http_protocol = "https" if use_ssl else "http"
         current_site = Site.objects.get_current()
-        base_url = "{0}://{1}".format(default_http_protocol, current_site.domain)
+        base_url = f"{default_http_protocol}://{current_site.domain}"
         return {
             "default_http_protocol": default_http_protocol,
             "current_site": current_site,

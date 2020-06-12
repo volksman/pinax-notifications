@@ -47,8 +47,6 @@ Exceptions:
             NotMyLock - File was locked but not by the current thread/process
 """
 
-from __future__ import division
-
 import errno
 import os
 import socket
@@ -178,10 +176,7 @@ class LockBase:
         else:
             tname = ""
         dirname = os.path.dirname(self.lock_file)
-        self.unique_name = os.path.join(dirname,
-                                        "%s.%s%s" % (self.hostname,
-                                                     tname,
-                                                     self.pid))
+        self.unique_name = os.path.join(dirname, f"{self.hostname}.{tname}{self.pid}")
 
     def acquire(self, timeout=None):
         """
@@ -245,7 +240,7 @@ class LinkFileLock(LockBase):
     def acquire(self, timeout=None):
         try:
             open(self.unique_name, "wb").close()
-        except IOError:
+        except OSError:
             raise LockFailed("failed to create %s" % self.unique_name)
 
         end_time = time.time()
@@ -288,9 +283,7 @@ class LinkFileLock(LockBase):
         return os.path.exists(self.lock_file)
 
     def i_am_locking(self):
-        return (self.is_locked() and
-                os.path.exists(self.unique_name) and
-                os.stat(self.unique_name).st_nlink == 2)
+        return (self.is_locked() and os.path.exists(self.unique_name) and os.stat(self.unique_name).st_nlink == 2)
 
     def break_lock(self):
         if os.path.exists(self.lock_file):
@@ -313,7 +306,7 @@ class MkdirFileLock(LockBase):
         # it.
         self.unique_name = os.path.join(
             self.lock_file,
-            "{}.{}{}".format(self.hostname, tname, self.pid)
+            f"{self.hostname}.{tname}{self.pid}"
         )
 
     def attempt_acquire(self, timeout, end_time, wait):
@@ -365,8 +358,7 @@ class MkdirFileLock(LockBase):
         return os.path.exists(self.lock_file)
 
     def i_am_locking(self):
-        return (self.is_locked() and
-                os.path.exists(self.unique_name))
+        return (self.is_locked() and os.path.exists(self.unique_name))
 
     def break_lock(self):
         if os.path.exists(self.lock_file):

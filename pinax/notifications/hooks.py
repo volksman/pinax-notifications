@@ -5,7 +5,7 @@ from .conf import settings
 from .utils import load_media_defaults
 
 
-class DefaultHookSet(object):
+class DefaultHookSet:
 
     def notice_setting_for_user(self, user, notice_type, medium, scoping=None):
         kwargs = {
@@ -39,7 +39,7 @@ class DefaultHookSet(object):
             return setting
 
 
-class HookProxy(object):
+class HookProxy:
 
     def __getattr__(self, attr):
         return getattr(settings.PINAX_NOTIFICATIONS_HOOKSET, attr)
